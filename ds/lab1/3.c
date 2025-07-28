@@ -65,6 +65,11 @@ void swap(int *x, int *y)
 
 void bubbleSort(int arr[], int n)
 {
+	if (n <= 1)
+	{
+		return;
+	}
+	
 	for (int i = 0; i < n - 1; i++)
 	{
 		for (int j = 0; j < n - i - 1; j++)
@@ -79,6 +84,11 @@ void bubbleSort(int arr[], int n)
 
 void selectionSort(int arr[], int n)
 {
+	if (n <= 1)
+	{
+		return;
+	}
+	
 	for (int i = 0; i < n - 1; i++)
 	{
 		int min = i;
@@ -95,6 +105,11 @@ void selectionSort(int arr[], int n)
 
 void insertionSort(int arr[], int n)
 {
+	if (n <= 1)
+	{
+		return;
+	}
+	
 	for (int i = 1; i < n; i++)
 	{
 		int key = arr[i];
