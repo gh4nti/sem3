@@ -1,4 +1,4 @@
-module example1(x1, x2, x3, f);
+module example1_2(x1, x2, x3, f);
     input x1, x2, x3;
     output f;
     wire w1, w2, nx2;
