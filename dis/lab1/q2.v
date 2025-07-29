@@ -1,4 +1,4 @@
-module q2_1(a, b, c, d, f, g);
+module q2(a, b, c, d, f, g);
 
 	input a, b, c, d;
 	output f, g;

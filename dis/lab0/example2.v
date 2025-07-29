@@ -1,4 +1,4 @@
-module example2_1(x1, x2, x3, x4, f, g, h);
+module example2(x1, x2, x3, x4, f, g, h);
 
 	input x1, x2, x3, x4;
 	output f, g, h;
