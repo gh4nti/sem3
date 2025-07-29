@@ -1,6 +1,7 @@
 // Write a recursive C program to implement selection sort using pointers.
 
 #include <stdio.h>
+#include <stdlib.h>
 
 void swap(int *x, int *y);
 void selectionSortRecursive(int *arr, int n);

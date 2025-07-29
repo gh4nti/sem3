@@ -11,6 +11,7 @@ iii. Finds and displays the student with the highest marks using pointer-based a
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct Student

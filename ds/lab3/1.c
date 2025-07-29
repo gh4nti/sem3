@@ -8,6 +8,7 @@ e.) to delete a substring
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int stringLength(char *str);
 void stringConcat(char *res, char *str1, char *str2);

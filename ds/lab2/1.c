@@ -1,6 +1,7 @@
 // Write a small function to find the smallest element in an array using pointers.
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int findSmallest(int *arr, int n);
 
