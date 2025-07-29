@@ -9,6 +9,7 @@ e.) to delete a substring
 
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX 100
 
 int stringLength(char *str);
 void stringConcat(char *res, char *str1, char *str2);
@@ -21,10 +22,20 @@ int main()
 	char *str1, *str2, *res;
 	int c, pos, len;
 
+	str1 = (char *)malloc(MAX * sizeof(char));
+	str2 = (char *)malloc(MAX * sizeof(char));
+	res = (char *)malloc((2 * MAX) * sizeof(char)); // Allocate enough space for concatenation
+
+	if (!str1 || !str2 || !res)
+	{
+		printf("Memory allocation failed!\n");
+		return 1;
+	}
+
 	printf("Enter the first string: ");
-	fgets(str1, sizeof(str1), stdin);
+	fgets(str1, MAX, stdin);
 	printf("Enter the second string: ");
-	fgets(str2, sizeof(str2), stdin);
+	fgets(str2, MAX, stdin);
 
 	// remove trailing newline character, if any
 	if (str1[stringLength(str1) - 1] == '\n')
@@ -57,7 +68,7 @@ int main()
 			break;
 
 		case 2:
-			stringConcatenate(res, str1, str2);
+			stringConcat(res, str1, str2);
 			printf("Concatenated string: %s\n", res);
 			break;
 
@@ -78,13 +89,21 @@ int main()
 			getchar();
 
 			printf("Enter the substring to insert: ");
-			fgets(str2, sizeof(str2), stdin);
+			fgets(str2, MAX, stdin);
 
 			// remove trailing newline from the substring if present
 			if (str2[stringLength(str2) - 1] == '\n')
 				str2[stringLength(str2) - 1] = '\0';
-			stringInsert(str1, str2, pos);
-			printf("String after insertion: %s\n", str1);
+
+			if (pos >= 0 && pos <= stringLength(str1))
+			{
+				stringInsert(str1, str2, pos);
+				printf("String after insertion: %s\n", str1);
+			}
+			else
+			{
+				printf("Invalid position for insertion.\n");
+			}
 			break;
 
 		case 5:
@@ -92,12 +111,23 @@ int main()
 			scanf("%d", &pos);
 			printf("Enter the length of the substring to delete: ");
 			scanf("%d", &len);
-			stringDelete(str1, pos, len);
-			printf("String after deletion: %s\n", str1);
+
+			if (pos >= 0 && pos < stringLength(str1) && len >= 0 && pos + len <= stringLength(str1))
+			{
+				stringDelete(str1, pos, len);
+				printf("String after deletion: %s\n", str1);
+			}
+			else
+			{
+				printf("Invalid position or length for deletion.\n");
+			}
 			break;
 
 		case 6:
 			printf("Exiting...\n");
+			free(str1);
+			free(str2);
+			free(res);
 			return 0;
 
 		default:
@@ -156,23 +186,44 @@ int stringCompare(char *str1, char *str2)
 void stringInsert(char *str, char *sub, int pos)
 {
 	int subLength = stringLength(sub);
-	char *original = str;
+	int strLength = stringLength(str);
+	int i;
 
-	for (char *temp = str + stringLength(str); temp >= str + pos; temp--)
+	// Check if there is enough space to insert the substring
+	// If not, print an error message and return
+	if (strLength + subLength >= 100)
 	{
-		*(temp + subLength) = *temp;
+		printf("Not enough space to insert the substring.\n");
+		return;
 	}
 
-	for (int i = 0; i < subLength; i++)
+	// Shift the characters to make space for the substring
+	for (i = strLength; i >= pos; i--)
 	{
-		*(str + pos + i) = *(sub + i);
+		str[i + subLength] = str[i];
 	}
+
+	// Insert the substring
+	for (i = 0; i < subLength; i++)
+	{
+		str[pos + i] = sub[i];
+	}
+
+	// Null-terminate the string
+	str[strLength + subLength] = '\0';
 }
 
 void stringDelete(char *str, int pos, int len)
 {
-	for (char *tmp = str + pos; *(tmp + len) != '\0'; tmp++)
+	int i;
+	int strLength = stringLength(str);
+
+	// Shift the characters to overwrite the substring to be deleted
+	for (i = pos; i <= strLength - len; i++)
 	{
-		*tmp = *(tmp + len);
+		str[i] = str[i + len];
 	}
+
+	// Null-terminate the string
+	str[strLength - len] = '\0';
 }
