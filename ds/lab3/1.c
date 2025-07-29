@@ -200,13 +200,13 @@ void stringInsert(char *str, char *sub, int pos)
 	// Shift the characters to make space for the substring
 	for (i = strLength; i >= pos; i--)
 	{
-		str[i + subLength] = str[i];
+		*(str + i + subLength) = *(str + i);
 	}
 
 	// Insert the substring
 	for (i = 0; i < subLength; i++)
 	{
-		str[pos + i] = sub[i];
+		*(str + pos + i) = *(sub + i);
 	}
 
 	// Null-terminate the string
@@ -221,9 +221,9 @@ void stringDelete(char *str, int pos, int len)
 	// Shift the characters to overwrite the substring to be deleted
 	for (i = pos; i <= strLength - len; i++)
 	{
-		str[i] = str[i + len];
+		*(str + i) = *(str + i + len);
 	}
 
 	// Null-terminate the string
-	str[strLength - len] = '\0';
+	*(str + strLength - len) = '\0';
 }

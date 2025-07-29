@@ -51,26 +51,26 @@ void read(struct student *students, int n)
 		printf("\nEnter details for student %d:\n", i + 1);
 
 		printf("Name: ");
-		fgets((students + i)->name, sizeof((students + i)->name), stdin);
-		(students + i)->name[strcspn((students + i)->name, "\n")] = '\0'; // remove the newline character
+		fgets(((students + i))->name, sizeof(((students + i))->name), stdin);
+		((students + i))->name[strcspn(((students + i))->name, "\n")] = '\0'; // remove the newline character
 
 		printf("Roll Number: ");
-		if (scanf("%d", &(students + i)->roll_no) != 1 || (students + i)->roll_no <= 0)
+		if (scanf("%d", &((students + i))->roll_no) != 1 || ((students + i))->roll_no <= 0)
 		{
 			printf("Invalid roll number. Please enter a positive integer.\n");
 			// Handle the error, e.g., by setting a default value or exiting the program
-			(students + i)->roll_no = 0; // Set to a default value
+			((students + i))->roll_no = 0; // Set to a default value
 			while (getchar() != '\n')
 				; // Clear the input buffer
 		}
 		getchar();
 
 		printf("Grade: ");
-		if (scanf(" %c", &(students + i)->grade) != 1)
+		if (scanf(" %c", &((students + i))->grade) != 1)
 		{
 			printf("Invalid grade.\n");
 			// Handle the error
-			(students + i)->grade = ' '; // Set to a default value
+			((students + i))->grade = ' '; // Set to a default value
 			while (getchar() != '\n')
 				; // Clear the input buffer
 		}
