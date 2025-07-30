@@ -1,5 +1,5 @@
 $date
-	Tue Jul 29 23:38:38 2025
+	Wed Jul 30 20:39:14 2025
 $end
 $version
 	Icarus Verilog
@@ -21,7 +21,6 @@ $var wire 1 % c $end
 $var wire 1 & d $end
 $var wire 1 " f $end
 $var wire 1 ! g $end
-$var wire 1 ' i $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
@@ -30,7 +29,6 @@ $dumpall
 $end
 #0
 $dumpvars
-1'
 0&
 0%
 0$
@@ -39,8 +37,8 @@ $dumpvars
 1!
 $end
 #20
-0"
 0!
+0"
 1&
 #40
 0&
@@ -68,8 +66,8 @@ $end
 0$
 1#
 #180
-0"
 0!
+0"
 1&
 #200
 0&
@@ -79,8 +77,16 @@ $end
 1&
 #240
 0"
-0'
 0&
 0%
 1$
+#260
+1"
+1&
+#280
+0&
+1%
+#300
+0"
+1&
 #320
