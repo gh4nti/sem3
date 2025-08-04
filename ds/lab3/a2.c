@@ -46,12 +46,12 @@ int main()
 	}
 
 	printf("Original Matrix:\n");
-	displaySparseMatrix(a);
+	printSparseMatrix(a);
 
 	transpose(a, b);
 
 	printf("\nTransposed Matrix:\n");
-	displaySparseMatrix(b);
+	printSparseMatrix(b);
 
 	free(a);
 	free(b);
@@ -61,8 +61,8 @@ int main()
 
 void transpose(Term *a, Term *b)
 {
-	int n = a->val; // Number of non-zero terms
-	b->row = a->col;  // Rows and columns are swapped
+	int n = a->val;	 // Number of non-zero terms
+	b->row = a->col; // Rows and columns are swapped
 	b->col = a->row;
 	b->val = n;
 
