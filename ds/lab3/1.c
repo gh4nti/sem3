@@ -1,3 +1,12 @@
+/*
+Write a program to perform following string operations without using string handling functions:
+- length of the string
+- string concatenation
+- string comparison
+- to insert a sub string
+- to delete a substring
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 100
