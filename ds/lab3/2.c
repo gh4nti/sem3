@@ -4,16 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct student
+typedef struct student
 {
-	char name[50];
+	char *name;
 	int roll_no;
 	char grade;
-};
+} Student;
 
-void read(struct student *students, int n);
-void display(struct student *students, int n);
-void sort(struct student *students, int n);
+void read(Student *students, int n);
+void display(Student *students, int n);
+void sort(Student *students, int n);
+void freeStudentMemory(Student *students, int n);
 
 int main()
 {
@@ -23,7 +24,7 @@ int main()
 	scanf("%d", &n);
 	getchar();
 
-	struct student *students = (struct student *)malloc(n * sizeof(struct student));
+	Student *students = (Student *)malloc(n * sizeof(Student));
 
 	if (students == NULL)
 	{
@@ -35,74 +36,93 @@ int main()
 
 	printf("Before sorting:\n");
 	display(students, n);
-	sort(students, n);
 
+	sort(students, n);
 	printf("After sorting:\n");
 	display(students, n);
 
+	freeStudentMemory(students, n);
 	free(students);
 	return 0;
 }
 
-void read(struct student *students, int n)
+void read(Student *students, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
+		Student *current_student = students + i;
+
 		printf("\nEnter details for student %d:\n", i + 1);
 
+		current_student->name = (char *)malloc(100 * sizeof(char));
+		if (current_student->name == NULL)
+		{
+			printf("Memory allocation for name failed.\n");
+			return;
+		}
+
 		printf("Name: ");
-		fgets(((students + i))->name, sizeof(((students + i))->name), stdin);
-		((students + i))->name[strcspn(((students + i))->name, "\n")] = '\0'; // remove the newline character
+		fgets(current_student->name, 100, stdin);
+		current_student->name[strcspn(current_student->name, "\n")] = '\0';
 
 		printf("Roll Number: ");
-		if (scanf("%d", &((students + i))->roll_no) != 1 || ((students + i))->roll_no <= 0)
+		while (scanf("%d", &current_student->roll_no) != 1 || current_student->roll_no <= 0)
 		{
 			printf("Invalid roll number. Please enter a positive integer.\n");
-			// Handle the error, e.g., by setting a default value or exiting the program
-			((students + i))->roll_no = 0; // Set to a default value
 			while (getchar() != '\n')
-				; // Clear the input buffer
+				;
 		}
+
 		getchar();
 
 		printf("Grade: ");
-		if (scanf(" %c", &((students + i))->grade) != 1)
+		while (scanf(" %c", &current_student->grade) != 1)
 		{
 			printf("Invalid grade.\n");
-			// Handle the error
-			((students + i))->grade = ' '; // Set to a default value
 			while (getchar() != '\n')
-				; // Clear the input buffer
+				;
 		}
-		getchar();
 	}
 }
 
-void display(struct student *students, int n)
+void display(Student *students, int n)
 {
 	printf("\nStudent Information:\n");
 	for (int i = 0; i < n; i++)
 	{
+		Student *current_student = students + i;
+
 		printf("\nStudent %d:\n", i + 1);
-		printf("Name: %s\n", (students + i)->name);
-		printf("Roll Number: %d\n", (students + i)->roll_no);
-		printf("Grade: %c\n", (students + i)->grade);
+		printf("Name: %s\n", current_student->name);
+		printf("Roll Number: %d\n", current_student->roll_no);
+		printf("Grade: %c\n", current_student->grade);
 	}
 }
 
-void sort(struct student *students, int n)
+void sort(Student *students, int n)
 {
-	struct student tmp;
+	Student tmp;
 	for (int i = 0; i < n - 1; i++)
 	{
 		for (int j = i + 1; j < n; j++)
 		{
-			if ((students + i)->roll_no > (students + j)->roll_no)
+			Student *student_i = students + i;
+			Student *student_j = students + j;
+
+			if (student_i->roll_no > student_j->roll_no)
 			{
-				tmp = *(students + i);
-				*(students + i) = *(students + j);
-				*(students + j) = tmp;
+				tmp = *student_i;
+				*student_i = *student_j;
+				*student_j = tmp;
 			}
 		}
+	}
+}
+
+void freeStudentMemory(Student *students, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		free(*(students + i)->name);
 	}
 }
