@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct student
+typedef struct Student
 {
 	char *name;
 	int roll_no;
