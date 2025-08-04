@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct
+typedef struct Term
 {
 	int row;
 	int col;
-	int value;
+	int val;
 } Term;
 
 void fastTranspose(Term *a, Term *b);
@@ -16,7 +16,6 @@ void printSparseMatrix(Term *arr);
 int main()
 {
 	int r, c, n;
-	int i;
 
 	printf("Enter number of rows, columns and non-zero elements: ");
 	scanf("%d %d %d", &r, &c, &n);
@@ -38,12 +37,12 @@ int main()
 
 	a->row = r;
 	a->col = c;
-	a->value = n;
+	a->val = n;
 
 	printf("Enter row, column, and value for each non-zero element:\n");
-	for (i = 1; i <= n; i++)
+	for (int i = 1; i <= n; i++)
 	{
-		scanf("%d %d %d", &(a + i)->row, &(a + i)->col, &(a + i)->value);
+		scanf("%d %d %d", &(a + i)->row, &(a + i)->col, &(a + i)->val);
 	}
 
 	printf("Original Sparse Matrix:\n");
@@ -62,11 +61,10 @@ int main()
 
 void fastTranspose(Term *a, Term *b)
 {
-	int n = a->value;
+	int n = a->val;
 	int numCols = a->col;
 	int *rowTerms = (int *)malloc(numCols * sizeof(int));
 	int *startingPos = (int *)malloc(numCols * sizeof(int));
-	int i, j;
 
 	if (!rowTerms || !startingPos)
 	{
@@ -78,32 +76,32 @@ void fastTranspose(Term *a, Term *b)
 
 	b->row = numCols;
 	b->col = a->row;
-	b->value = n;
+	b->val = n;
 
 	if (n > 0)
 	{
-		for (i = 0; i < numCols; i++)
+		for (int i = 0; i < numCols; i++)
 		{
 			*(rowTerms + i) = 0;
 		}
 
-		for (i = 1; i <= n; i++)
+		for (int i = 1; i <= n; i++)
 		{
 			(*(rowTerms + ((a + i)->col)))++;
 		}
 
 		*startingPos = 1;
-		for (i = 1; i < numCols; i++)
+		for (int i = 1; i < numCols; i++)
 		{
 			*(startingPos + i) = *(startingPos + (i - 1)) + *(rowTerms + (i - 1));
 		}
 
-		for (i = 1; i <= n; i++)
+		for (int i = 1; i <= n; i++)
 		{
-			j = (*(startingPos + ((a + i)->col)))++;
+			int j = (*(startingPos + ((a + i)->col)))++;
 			(b + j)->row = (a + i)->col;
 			(b + j)->col = (a + i)->row;
-			(b + j)->value = (a + i)->value;
+			(b + j)->val = (a + i)->val;
 		}
 	}
 	free(rowTerms);
@@ -114,7 +112,7 @@ void printSparseMatrix(Term *arr)
 {
 	int r = arr->row;
 	int c = arr->col;
-	int n = arr->value;
+	int n = arr->val;
 	int k = 1;
 	int i, j;
 
@@ -126,7 +124,7 @@ void printSparseMatrix(Term *arr)
 		{
 			if (k <= n && (arr + k)->row == i && (arr + k)->col == j)
 			{
-				printf("%d ", (arr + k)->value);
+				printf("%d ", (arr + k)->val);
 				k++;
 			}
 			else

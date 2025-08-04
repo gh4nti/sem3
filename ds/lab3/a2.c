@@ -1,15 +1,17 @@
+// Write a program in C to find the transpose of a sparse matrix represented using array of objects.
+
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct
+typedef struct Term
 {
 	int row;
 	int col;
-	int value;
+	int val;
 } Term;
 
 void transpose(Term *a, Term *b);
-void displaySparseMatrix(Term *arr);
+void printSparseMatrix(Term *arr);
 
 int main()
 {
@@ -35,12 +37,12 @@ int main()
 	// First element stores dimensions and number of non-zero terms
 	a->row = rows;
 	a->col = cols;
-	a->value = numTerms;
+	a->val = numTerms;
 
 	printf("Enter the row, column, and value of each non-zero term:\n");
 	for (i = 1; i <= numTerms; i++)
 	{
-		scanf("%d %d %d", &(a + i)->row, &(a + i)->col, &(a + i)->value);
+		scanf("%d %d %d", &(a + i)->row, &(a + i)->col, &(a + i)->val);
 	}
 
 	printf("Original Matrix:\n");
@@ -59,10 +61,10 @@ int main()
 
 void transpose(Term *a, Term *b)
 {
-	int n = a->value; // Number of non-zero terms
+	int n = a->val; // Number of non-zero terms
 	b->row = a->col;  // Rows and columns are swapped
 	b->col = a->row;
-	b->value = n;
+	b->val = n;
 
 	int i, j;
 	int currentB = 1;
@@ -74,18 +76,18 @@ void transpose(Term *a, Term *b)
 			{
 				(b + currentB)->row = (a + j)->col;
 				(b + currentB)->col = (a + j)->row;
-				(b + currentB)->value = (a + j)->value;
+				(b + currentB)->val = (a + j)->val;
 				currentB++;
 			}
 		}
 	}
 }
 
-void displaySparseMatrix(Term *arr)
+void printSparseMatrix(Term *arr)
 {
 	int rows = arr->row;
 	int cols = arr->col;
-	int numTerms = arr->value;
+	int numTerms = arr->val;
 	int i, j, k = 1;
 
 	printf("Rows: %d, Columns: %d, Non-zero Terms: %d\n", rows, cols, numTerms);
@@ -96,7 +98,7 @@ void displaySparseMatrix(Term *arr)
 		{
 			if (k <= numTerms && (arr + k)->row == i && (arr + k)->col == j)
 			{
-				printf("%d ", (arr + k)->value);
+				printf("%d ", (arr + k)->val);
 				k++;
 			}
 			else
