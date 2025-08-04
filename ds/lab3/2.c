@@ -123,6 +123,6 @@ void freeStudentMemory(Student *students, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
-		free(*(students + i)->name);
+		free((students + i)->name);
 	}
 }
