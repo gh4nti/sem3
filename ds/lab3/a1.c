@@ -5,133 +5,94 @@
 
 typedef struct Term
 {
-	int row;
-	int col;
-	int val;
+	int r, c, v;
 } Term;
 
 void fastTranspose(Term *a, Term *b);
-void printSparseMatrix(Term *arr);
 
 int main()
 {
-	int r, c, n;
-
-	printf("Enter number of rows, columns and non-zero elements: ");
-	scanf("%d %d %d", &r, &c, &n);
-
-	if (n <= 0)
-	{
-		printf("No non-zero elements to process.\n");
-		return 0;
-	}
-
+	int n;
+	printf("Enter the number of non-zero elements: ");
+	scanf("%d", &n);
 	Term *a = (Term *)malloc((n + 1) * sizeof(Term));
-	Term *b = (Term *)malloc((n + 1) * sizeof(Term));
+	a->v = n;
 
-	if (!a || !b)
+	if (a == NULL)
 	{
 		printf("Memory allocation failed.\n");
-		return 1;
+		return -1;
 	}
 
-	a->row = r;
-	a->col = c;
-	a->val = n;
+	printf("Enter number of rows and columns: ");
+	scanf("%d %d", &a->r, &a->c);
 
-	printf("Enter row, column, and value for each non-zero element:\n");
-	for (int i = 1; i <= n; i++)
+	printf("Enter elements in the format: row column value\n");
+	for (int i = 1; i < a->v + 1; i++)
 	{
-		scanf("%d %d %d", &(a + i)->row, &(a + i)->col, &(a + i)->val);
+		scanf("%d %d %d", &a[i].r, &a[i].c, &a[i].v);
 	}
 
-	printf("Original Sparse Matrix:\n");
-	printSparseMatrix(a);
+	printf("\nOriginal matrix:\n");
+	for (int i = 0; i <= a->v; i++)
+	{
+		printf("%d %d %d\n", a[i].r, a[i].c, a[i].v);
+	}
+
+	Term *b = (Term *)malloc((n + 1) * sizeof(Term));
+	if (b == NULL)
+	{
+		printf("Memory allocation failed.\n");
+		free(a);
+		return -1;
+	}
 
 	fastTranspose(a, b);
 
-	printf("\nFast Transpose of Sparse Matrix:\n");
-	printSparseMatrix(b);
+	printf("\nFast transposed matrix:\n");
+	for (int i = 0; i < n; i++)
+	{
+		printf("%d %d %d\n", b[i].r, b[i].c, b[i].v);
+	}
 
 	free(a);
 	free(b);
-
 	return 0;
 }
 
 void fastTranspose(Term *a, Term *b)
 {
-	int n = a->val;
-	int numCols = a->col;
-	int *rowTerms = (int *)malloc(numCols * sizeof(int));
-	int *startingPos = (int *)malloc(numCols * sizeof(int));
+	int *rowTerms = (int *)malloc((a->c + 1) * sizeof(int));
+	int *startingPos = (int *)malloc((a->c + 1) * sizeof(int));
 
-	if (!rowTerms || !startingPos)
+	if (rowTerms == NULL || startingPos == NULL)
 	{
-		printf("Memory allocation failed in fastTranspose.\n");
-		free(rowTerms);
-		free(startingPos);
-		return;
+		printf("Memory allocation failed.\n");
+		exit(-1);
 	}
 
-	b->row = numCols;
-	b->col = a->row;
-	b->val = n;
+	b->r = a->c;
+	b->c = a->r;
+	b->v = a->v;
 
-	if (n > 0)
+	if (a->v > 0)
 	{
-		for (int i = 0; i < numCols; i++)
+		for (int i = 0; i < a->c; i++)
+			rowTerms[i] = 0;
+		for (int i = 1; i <= a->v; i++)
+			rowTerms[a[i].c]++;
+
+		startingPos[0] = 1;
+
+		for (int i = 1; i < a->c; i++)
+			startingPos[i] = startingPos[i - 1] + rowTerms[i - 1];
+
+		for (int i = 1; i <= a->v; i++)
 		{
-			*(rowTerms + i) = 0;
+			int j = startingPos[a[i].c]++;
+			b[j].r = a[i].c;
+			b[j].c = a[i].r;
+			b[j].v = a[i].v;
 		}
-
-		for (int i = 1; i <= n; i++)
-		{
-			(*(rowTerms + ((a + i)->col)))++;
-		}
-
-		*startingPos = 1;
-		for (int i = 1; i < numCols; i++)
-		{
-			*(startingPos + i) = *(startingPos + (i - 1)) + *(rowTerms + (i - 1));
-		}
-
-		for (int i = 1; i <= n; i++)
-		{
-			int j = (*(startingPos + ((a + i)->col)))++;
-			(b + j)->row = (a + i)->col;
-			(b + j)->col = (a + i)->row;
-			(b + j)->val = (a + i)->val;
-		}
-	}
-	free(rowTerms);
-	free(startingPos);
-}
-
-void printSparseMatrix(Term *arr)
-{
-	int r = arr->row;
-	int c = arr->col;
-	int n = arr->val;
-	int k = 1;
-	int i, j;
-
-	printf("Rows: %d, Columns: %d, Non-zero elements: %d\n", r, c, n);
-
-	for (i = 0; i < r; i++)
-	{
-		for (j = 0; j < c; j++)
-		{
-			if (k <= n && (arr + k)->row == i && (arr + k)->col == j)
-			{
-				printf("%d ", (arr + k)->val);
-				k++;
-			}
-			else
-			{
-				printf("0 ");
-			}
-		}
-		printf("\n");
 	}
 }
