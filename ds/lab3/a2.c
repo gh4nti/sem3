@@ -39,7 +39,7 @@ int main()
 		printf("%d %d %d\n", a[i].r, a[i].c, a[i].v);
 	}
 
-	Term *b = (Term *)malloc(n * sizeof(Term));
+	Term *b = (Term *)malloc((n + 1) * sizeof(Term));
 	if (b == NULL)
 	{
 		printf("Memory allocation failed.\n");
