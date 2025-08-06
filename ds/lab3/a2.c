@@ -62,18 +62,17 @@ int main()
 
 void transpose(Term *a, Term *b)
 {
-	int n = a->v;
 	b->r = a->c;
 	b->c = a->r;
-	b->v = n;
+	b->v = a->v;
 
-	if (n > 0)
+	if (a->v > 0)
 	{
 		int k = 1;
 
 		for (int i = 0; i < a->c; i++)
 		{
-			for (int j = 0; j < n; j++)
+			for (int j = 0; j < a->v; j++)
 			{
 				if (a[j].c == i)
 				{
