@@ -16,15 +16,14 @@ void freeList(Node *head);
 
 int main()
 {
-	// example list X: 1 -> 3 -> 5
-	Node *x = createNode(1);
-	x->next = createNode(3);
-	x->next->next = createNode(5);
+	int n1, n2;
+	printf("Enter number of elements in X: ");
+	scanf("%d", &n1);
+	Node *x = createList(n1);
 
-	// example list Y: 2 -> 4 -> 6
-	Node *y = createNode(2);
-	y->next = createNode(4);
-	y->next->next = createNode(6);
+	printf("Enter number of elements in Y: ");
+	scanf("%d", &n2);
+	Node *y = createList(n2);
 
 	printf("X: ");
 	printList(x);
@@ -32,10 +31,10 @@ int main()
 	printList(y);
 
 	Node *z = mergeList(x, y);
-	printf("Z: ");
+	printf("Z (merged): ");
 	printList(z);
 
-	freeList(z); // free merged list
+	freeList(z);
 	return 0;
 }
 
