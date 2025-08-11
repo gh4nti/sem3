@@ -1,10 +1,12 @@
+// Interleave two lists
+
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef struct Node
 {
 	int data;
-	struct Node *link;
+	struct Node *next;
 } Node;
 
 Node *createNode(int data);
@@ -16,14 +18,14 @@ int main()
 {
 	// Example list1: 1 -> 3 -> 5 -> 7
 	Node *list1 = createNode(1);
-	list1->link = createNode(3);
-	list1->link->link = createNode(5);
-	list1->link->link->link = createNode(7);
+	list1->next = createNode(3);
+	list1->next->next = createNode(5);
+	list1->next->next->next = createNode(7);
 
 	// Example list2: 2 -> 4 -> 6
 	Node *list2 = createNode(2);
-	list2->link = createNode(4);
-	list2->link->link = createNode(6);
+	list2->next = createNode(4);
+	list2->next->next = createNode(6);
 
 	printf("List 1: ");
 	printList(list1);
@@ -49,7 +51,7 @@ Node *createNode(int data)
 		exit(1);
 	}
 	temp->data = data;
-	temp->link = NULL;
+	temp->next = NULL;
 	return temp;
 }
 
@@ -59,7 +61,7 @@ void printList(Node *head)
 	while (head != NULL)
 	{
 		printf("%d ", head->data);
-		head = head->link;
+		head = head->next;
 	}
 	printf("\n");
 }
@@ -70,7 +72,7 @@ void freeList(Node *head)
 	while (head)
 	{
 		Node *temp = head;
-		head = head->link;
+		head = head->next;
 		free(temp);
 	}
 }
@@ -88,15 +90,15 @@ Node *interleaveLists(Node *list1, Node *list2)
 
 	while (p1 && p2)
 	{
-		temp1 = p1->link;
-		temp2 = p2->link;
+		temp1 = p1->next;
+		temp2 = p2->next;
 
-		p1->link = p2;
+		p1->next = p2;
 
 		if (!temp1)
 			break; // if list1 ends, stop
 
-		p2->link = temp1;
+		p2->next = temp1;
 
 		p1 = temp1;
 		p2 = temp2;
