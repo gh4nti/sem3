@@ -109,7 +109,6 @@ void printStudent(Student *students, int n)
 
 void sortStudents(Student *students, int n)
 {
-	Student tmp;
 	for (int i = 0; i < n - 1; i++)
 	{
 		for (int j = i + 1; j < n; j++)
