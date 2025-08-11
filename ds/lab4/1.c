@@ -28,14 +28,14 @@ typedef struct Node
 
 void swap(int *x, int *y);
 Node *createNode(int data);
-void insertBefore(Node **head, int data, int key);
-void insertAfter(Node **head, int data, int key);
+void insertBeforeNode(Node **head, int data, int key);
+void insertAfterNode(Node **head, int data, int key);
 void deleteNode(Node **head, int data);
 void traverseList(Node *head);
 void reverseList(Node **head);
 void bubbleSortList(Node **head);
 void deleteAlternateNodes(Node **head);
-void insertIntoSorted(Node **head, int data);
+void insertIntoSortedList(Node **head, int data);
 
 int main()
 {
@@ -74,12 +74,12 @@ int main()
 		case 1:
 			printf("Enter data to insert and key to insert before: ");
 			scanf("%d %d", &data, &key);
-			insertBefore(&head, data, key);
+			insertBeforeNode(&head, data, key);
 			break;
 		case 2:
 			printf("Enter data to insert and key to insert after: ");
 			scanf("%d %d", &data, &key);
-			insertAfter(&head, data, key);
+			insertAfterNode(&head, data, key);
 			break;
 		case 3:
 			printf("Enter data to delete: ");
@@ -101,7 +101,7 @@ int main()
 		case 8:
 			printf("Enter data to insert into sorted list: ");
 			scanf("%d", &data);
-			insertIntoSorted(&head, data);
+			insertIntoSortedList(&head, data);
 			break;
 		case 9:
 			// Free memory before exiting
@@ -138,7 +138,7 @@ Node *createNode(int data)
 	return temp;
 }
 
-void insertBefore(Node **head, int data, int key)
+void insertBeforeNode(Node **head, int data, int key)
 {
 	Node *temp = createNode(data);
 	if (temp == NULL)
@@ -166,7 +166,7 @@ void insertBefore(Node **head, int data, int key)
 	current->next = temp;
 }
 
-void insertAfter(Node **head, int data, int key)
+void insertAfterNode(Node **head, int data, int key)
 {
 	Node *temp = createNode(data);
 	if (temp == NULL)
@@ -297,7 +297,7 @@ void deleteAlternateNodes(Node **head)
 	}
 }
 
-void insertIntoSorted(Node **head, int data)
+void insertIntoSortedList(Node **head, int data)
 {
 	Node *temp = createNode(data);
 	if (temp == NULL)
