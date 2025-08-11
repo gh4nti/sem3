@@ -33,7 +33,7 @@ void insertAfterNode(Node **head, int data, int key);
 void deleteNode(Node **head, int data);
 void traverseList(Node *head);
 void reverseList(Node **head);
-void bubbleSortList(Node **head);
+void bubbleSort(Node **head);
 void deleteAlternateNodes(Node **head);
 void insertIntoSortedList(Node **head, int data);
 
@@ -103,7 +103,7 @@ int main()
 			reverseList(&head);
 			break;
 		case 6:
-			bubbleSortList(&head);
+			bubbleSort(&head);
 			break;
 		case 7:
 			deleteAlternateNodes(&head);
@@ -263,16 +263,16 @@ void reverseList(Node **head)
 	*head = prev;
 }
 
-void bubbleSortList(Node **head)
+void bubbleSort(Node **head)
 {
 	if (*head == NULL || (*head)->next == NULL)
 		return;
 
-	int swapped;
+	int swapped = 1;
 	Node *ptr1;
 	Node *lptr = NULL;
 
-	do
+	while (swapped)
 	{
 		swapped = 0;
 		ptr1 = *head;
@@ -287,7 +287,7 @@ void bubbleSortList(Node **head)
 			ptr1 = ptr1->next;
 		}
 		lptr = ptr1;
-	} while (swapped);
+	}
 }
 
 void deleteAlternateNodes(Node **head)
