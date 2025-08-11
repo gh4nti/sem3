@@ -180,42 +180,42 @@ int strCompare(char *str1, char *str2)
 
 void strInsert(char *str, char *sub, int pos)
 {
-	int subLength = strLength(sub);
-	int strlength = strLength(str);
+	int subl = strLength(sub);
+	int strl = strLength(str);
 
 	// Ensure enough space for the new substring
-	if (strLength + subLength >= MAX)
+	if (strl + subl >= MAX)
 	{
 		printf("Not enough space to insert the substring.\n");
 		return;
 	}
 
 	// Shift the characters to make space for the substring
-	for (int i = strLength - 1; i >= pos; i--)
+	for (int i = strl - 1; i >= pos; i--)
 	{
-		*(str + i + subLength) = *(str + i);
+		*(str + i + subl) = *(str + i);
 	}
 
 	// Insert the substring
-	for (int i = 0; i < subLength; i++)
+	for (int i = 0; i < subl; i++)
 	{
 		*(str + pos + i) = *(sub + i);
 	}
 
 	// Null-terminate the string
-	str[strlength + subLength] = '\0';
+	str[strl + subl] = '\0';
 }
 
 void strDelete(char *str, int pos, int len)
 {
-	int strlength = strLength(str);
+	int strl = strLength(str);
 
 	// Shift characters to the left to delete the substring
-	for (int i = pos; i < strLength - len; i++)
+	for (int i = pos; i < strl - len; i++)
 	{
 		*(str + i) = *(str + i + len);
 	}
 
 	// Null-terminate the string
-	*(str + strlength - len) = '\0';
+	*(str + strl - len) = '\0';
 }
