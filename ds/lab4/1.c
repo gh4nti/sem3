@@ -1,22 +1,3 @@
-/*
-Write a menu-driven C program using structures to implement the following operations on a singly linked list:
-- Insert an element before another specified element in the list
-(Example: Insert 10 before 25)
-- Insert an element after another specified element in the list
-(Example: Insert 40 after 25)
-- Delete a specified element from the list
-(Example: Delete node containing 15)
-- Traverse the list and display all elements
-- Reverse the linked list
-(Modify the links such that the list is reversed)
-- Sort the list in ascending order
-(Using Bubble Sort or any appropriate algorithm on linked list)
-- Delete every alternate node in the list
-(Starting from the second node)
-- Insert an element into a sorted linked list while maintaining the sorted order
-(Example: Insert 28 into a list that is already sorted)
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,20 +20,30 @@ void insertIntoSortedList(Node **head, int data);
 
 int main()
 {
-	// Sample list: 45 -> 50 -> 12
-	Node *head = createNode(45);
-	if (head == NULL)
-		return -1;
+	Node *head = NULL, *tail = NULL;
+	int n, val, c, data, key;
 
-	head->next = createNode(50);
-	if (head->next == NULL)
-		return -1;
+	printf("Enter number of elements: ");
+	scanf("%d", &n);
 
-	head->next->next = createNode(12);
-	if (head->next->next == NULL)
-		return -1;
+	printf("Enter %d elements: ", n);
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d", &val);
+		Node *newNode = createNode(val);
+		if (head == NULL)
+		{
+			head = tail = newNode;
+		}
+		else
+		{
+			tail->next = newNode;
+			tail = newNode;
+		}
+	}
 
-	int c, data, key;
+	printf("Initial list: ");
+	traverseList(head);
 
 	while (1)
 	{
