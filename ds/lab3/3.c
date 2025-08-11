@@ -21,8 +21,8 @@ typedef struct Student
 	float marks;
 } Student;
 
-void readDetails(Student *s, int n);
-void displayDetails(const Student *s, int n);
+void readStudent(Student *s, int n);
+void printStudent(const Student *s, int n);
 void findTopper(const Student *s, int n);
 
 int main()
@@ -45,15 +45,15 @@ int main()
 		return -1;
 	}
 
-	readDetails(students, n);
-	displayDetails(students, n);
+	readStudent(students, n);
+	printStudent(students, n);
 	findTopper(students, n);
 
 	free(students);
 	return 0;
 }
 
-void readDetails(Student *s, int n)
+void readStudent(Student *s, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -74,7 +74,7 @@ void readDetails(Student *s, int n)
 	}
 }
 
-void displayDetails(const Student *s, int n)
+void printStudent(const Student *s, int n)
 {
 	printf("\n--- Student Details ---\n");
 	for (int i = 0; i < n; i++)
