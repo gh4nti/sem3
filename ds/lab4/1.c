@@ -27,42 +27,30 @@ typedef struct Node
 } Node;
 
 void swap(int *x, int *y);
-Node *new(int data);
-void insB(Node **head, int data, int key);
-void insA(Node **head, int data, int key);
-void del(Node **head, int data);
-void trav(Node *head);
-void rev(Node **head);
-void sort(Node **head);
-void delAlt(Node **head);
-void insSorted(Node **head, int data);
+Node *createNode(int data);
+void insertBefore(Node **head, int data, int key);
+void insertAfter(Node **head, int data, int key);
+void deleteNode(Node **head, int data);
+void traverseList(Node *head);
+void reverseList(Node **head);
+void bubbleSortList(Node **head);
+void deleteAlternateNodes(Node **head);
+void insertIntoSorted(Node **head, int data);
 
 int main()
 {
-	// sample list
-	Node *head = NULL;
-	head = new(45);
+	// Sample list: 45 -> 50 -> 12
+	Node *head = createNode(45);
 	if (head == NULL)
-	{
-		printf("Memory allocation failed!\n");
 		return -1;
-	}
-	head->link = new(50);
+
+	head->link = createNode(50);
 	if (head->link == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		free(head);
 		return -1;
-	}
-	head->link->link = new(12);
+
+	head->link->link = createNode(12);
 	if (head->link->link == NULL)
-	{
-		printf("Memory allocation failed!\n");
-		free(head->link);
-		free(head);
 		return -1;
-	}
-	head->link->link->link = NULL;
 
 	int c, data, key;
 
@@ -86,63 +74,75 @@ int main()
 		case 1:
 			printf("Enter data to insert and key to insert before: ");
 			scanf("%d %d", &data, &key);
-			insB(&head, data, key);
+			insertBefore(&head, data, key);
 			break;
 		case 2:
 			printf("Enter data to insert and key to insert after: ");
 			scanf("%d %d", &data, &key);
-			insA(&head, data, key);
+			insertAfter(&head, data, key);
 			break;
 		case 3:
 			printf("Enter data to delete: ");
 			scanf("%d", &data);
-			del(&head, data);
+			deleteNode(&head, data);
 			break;
 		case 4:
-			trav(head);
+			traverseList(head);
 			break;
 		case 5:
-			rev(&head);
+			reverseList(&head);
 			break;
 		case 6:
-			sort(&head);
+			bubbleSortList(&head);
 			break;
 		case 7:
-			delAlt(&head);
+			deleteAlternateNodes(&head);
 			break;
 		case 8:
 			printf("Enter data to insert into sorted list: ");
 			scanf("%d", &data);
-			insSorted(&head, data);
+			insertIntoSorted(&head, data);
 			break;
 		case 9:
-			exit(0);
+			// Free memory before exiting
+			while (head != NULL)
+			{
+				Node *temp = head;
+				head = head->link;
+				free(temp);
+			}
+			return 0;
 		default:
 			printf("Invalid choice! Please try again.\n");
 		}
 	}
-	free(head);
-	return 0;
 }
 
-// create a new node
-Node *new(int data)
+void swap(int *x, int *y)
+{
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+Node *createNode(int data)
 {
 	Node *temp = (Node *)malloc(sizeof(Node));
+	if (temp == NULL)
+	{
+		printf("Memory allocation failed!\n");
+		return NULL;
+	}
 	temp->data = data;
 	temp->link = NULL;
 	return temp;
 }
 
-// insert a node before a key
-void insB(Node **head, int data, int key)
+void insertBefore(Node **head, int data, int key)
 {
-	Node *temp = new(data);
+	Node *temp = createNode(data);
 	if (temp == NULL)
-	{
-		printf("Memory allocation failed!\n");
 		return;
-	}
 
 	if (*head == NULL || (*head)->data == key)
 	{
@@ -153,9 +153,7 @@ void insB(Node **head, int data, int key)
 
 	Node *current = *head;
 	while (current->link != NULL && current->link->data != key)
-	{
 		current = current->link;
-	}
 
 	if (current->link == NULL)
 	{
@@ -168,28 +166,15 @@ void insB(Node **head, int data, int key)
 	current->link = temp;
 }
 
-void swap(int *x, int *y)
+void insertAfter(Node **head, int data, int key)
 {
-	int temp = *x;
-	*x = *y;
-	*y = temp;
-}
-
-// insert a node after a key
-void insA(Node **head, int data, int key)
-{
-	Node *temp = new(data);
+	Node *temp = createNode(data);
 	if (temp == NULL)
-	{
-		printf("Memory allocation failed!\n");
 		return;
-	}
 
 	Node *current = *head;
 	while (current != NULL && current->data != key)
-	{
 		current = current->link;
-	}
 
 	if (current == NULL)
 	{
@@ -202,8 +187,7 @@ void insA(Node **head, int data, int key)
 	current->link = temp;
 }
 
-// delete a node
-void del(Node **head, int data)
+void deleteNode(Node **head, int data)
 {
 	if (*head == NULL)
 	{
@@ -226,19 +210,14 @@ void del(Node **head, int data)
 	}
 
 	if (prev == NULL)
-	{
 		*head = temp->link;
-	}
 	else
-	{
 		prev->link = temp->link;
-	}
 
 	free(temp);
 }
 
-// traverse the list and display elements
-void trav(Node *head)
+void traverseList(Node *head)
 {
 	if (head == NULL)
 	{
@@ -256,40 +235,34 @@ void trav(Node *head)
 	printf("\n");
 }
 
-// reverse the list
-void rev(Node **head)
+void reverseList(Node **head)
 {
 	if (*head == NULL || (*head)->link == NULL)
-	{
 		return;
-	}
 
-	Node *prev = NULL, *temp = *head, *next = NULL;
+	Node *prev = NULL, *curr = *head, *next = NULL;
 
-	while (temp != NULL)
+	while (curr != NULL)
 	{
-		next = temp->link;
-		temp->link = prev;
-		prev = temp;
-		temp = next;
+		next = curr->link;
+		curr->link = prev;
+		prev = curr;
+		curr = next;
 	}
 
 	*head = prev;
 }
 
-// sort the list using bubble sort
-void sort(Node **head)
+void bubbleSortList(Node **head)
 {
 	if (*head == NULL || (*head)->link == NULL)
-	{
 		return;
-	}
 
 	int swapped;
 	Node *ptr1;
 	Node *lptr = NULL;
 
-	for (swapped = 1; swapped;)
+	do
 	{
 		swapped = 0;
 		ptr1 = *head;
@@ -304,16 +277,13 @@ void sort(Node **head)
 			ptr1 = ptr1->link;
 		}
 		lptr = ptr1;
-	}
+	} while (swapped);
 }
 
-// delete every alternate node
-void delAlt(Node **head)
+void deleteAlternateNodes(Node **head)
 {
 	if (*head == NULL || (*head)->link == NULL)
-	{
 		return;
-	}
 
 	Node *temp = *head;
 	Node *next;
@@ -327,15 +297,11 @@ void delAlt(Node **head)
 	}
 }
 
-// insert into a sorted list
-void insSorted(Node **head, int data)
+void insertIntoSorted(Node **head, int data)
 {
-	Node *temp = new(data);
+	Node *temp = createNode(data);
 	if (temp == NULL)
-	{
-		printf("Memory allocation failed!\n");
 		return;
-	}
 
 	if (*head == NULL || (*head)->data >= data)
 	{
@@ -346,9 +312,7 @@ void insSorted(Node **head, int data)
 
 	Node *curr = *head;
 	while (curr->link != NULL && curr->link->data < data)
-	{
 		curr = curr->link;
-	}
 
 	temp->link = curr->link;
 	curr->link = temp;
