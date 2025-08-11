@@ -1,5 +1,3 @@
-// Interleave two lists
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,77 +7,84 @@ typedef struct Node
 	struct Node *link;
 } Node;
 
-Node *new(int data);
-void print(Node *head);
-Node *interleave(Node *list1, Node *list2);
+Node *createNode(int data);
+void printList(Node *head);
+Node *interleaveLists(Node *list1, Node *list2);
+void freeList(Node *head);
 
 int main()
 {
 	// Example list1: 1 -> 3 -> 5 -> 7
-	Node *list1 = new(1);
-	list1->link = new(3);
-	list1->link->link = new(5);
-	list1->link->link->link = new(7);
+	Node *list1 = createNode(1);
+	list1->link = createNode(3);
+	list1->link->link = createNode(5);
+	list1->link->link->link = createNode(7);
 
 	// Example list2: 2 -> 4 -> 6
-	Node *list2 = new(2);
-	list2->link = new(4);
-	list2->link->link = new(6);
+	Node *list2 = createNode(2);
+	list2->link = createNode(4);
+	list2->link->link = createNode(6);
 
 	printf("List 1: ");
-	print(list1);
+	printList(list1);
 	printf("List 2: ");
-	print(list2);
+	printList(list2);
 
-	Node *list3 = interleave(list1, list2);
+	Node *list3 = interleaveLists(list1, list2);
 
 	printf("Interleaved List: ");
-	print(list3);
+	printList(list3);
 
-	free(list1->link->link->link);
-	free(list1->link->link);
-	free(list1->link);
-	free(list1);
-	free(list2->link->link);
-	free(list2->link);
-	free(list2);
-	free(list3->link->link->link);
-	free(list3->link->link);
-	free(list3->link);
-	free(list3);
+	freeList(list3); // Free merged list
 	return 0;
 }
 
 // create a new node
-Node *new(int data)
+Node *createNode(int data)
 {
 	Node *temp = (Node *)malloc(sizeof(Node));
+	if (!temp)
+	{
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
 	temp->data = data;
 	temp->link = NULL;
 	return temp;
 }
 
 // print the list
-void print(Node *head)
+void printList(Node *head)
 {
-	Node *temp = head;
-	while (temp != NULL)
+	while (head != NULL)
 	{
-		printf("%d ", temp->data);
-		temp = temp->link;
+		printf("%d ", head->data);
+		head = head->link;
 	}
 	printf("\n");
 }
 
+// free the list
+void freeList(Node *head)
+{
+	while (head)
+	{
+		Node *temp = head;
+		head = head->link;
+		free(temp);
+	}
+}
+
 // interleave two lists
-Node *interleave(Node *list1, Node *list2)
+Node *interleaveLists(Node *list1, Node *list2)
 {
 	if (!list1)
 		return list2;
 	if (!list2)
 		return list1;
 
-	Node *head = list1, *p1 = list1, *p2 = list2, *temp1, *temp2;
+	Node *head = list1, *p1 = list1, *p2 = list2;
+	Node *temp1, *temp2;
 
 	while (p1 && p2)
 	{
@@ -89,7 +94,8 @@ Node *interleave(Node *list1, Node *list2)
 		p1->link = p2;
 
 		if (!temp1)
-			break;
+			break; // if list1 ends, stop
+
 		p2->link = temp1;
 
 		p1 = temp1;
