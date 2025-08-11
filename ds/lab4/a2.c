@@ -6,7 +6,7 @@
 typedef struct Node
 {
 	int data;
-	struct Node *link;
+	struct Node *next;
 } Node;
 
 Node *createNode(int data);
@@ -18,13 +18,13 @@ int main()
 {
 	// example list X: 1 -> 3 -> 5
 	Node *x = createNode(1);
-	x->link = createNode(3);
-	x->link->link = createNode(5);
+	x->next = createNode(3);
+	x->next->next = createNode(5);
 
 	// example list Y: 2 -> 4 -> 6
 	Node *y = createNode(2);
-	y->link = createNode(4);
-	y->link->link = createNode(6);
+	y->next = createNode(4);
+	y->next->next = createNode(6);
 
 	printf("X: ");
 	printList(x);
@@ -49,7 +49,7 @@ Node *createNode(int data)
 		exit(1);
 	}
 	temp->data = data;
-	temp->link = NULL;
+	temp->next = NULL;
 	return temp;
 }
 
@@ -60,7 +60,7 @@ void printList(Node *head)
 	while (temp != NULL)
 	{
 		printf("%d ", temp->data);
-		temp = temp->link;
+		temp = temp->next;
 	}
 	printf("\n");
 }
@@ -71,7 +71,7 @@ void freeList(Node *head)
 	while (head)
 	{
 		Node *temp = head;
-		head = head->link;
+		head = head->next;
 		free(temp);
 	}
 }
@@ -91,12 +91,12 @@ Node *mergeList(Node *x, Node *y)
 	if (x->data <= y->data)
 	{
 		head = tail = x;
-		x = x->link;
+		x = x->next;
 	}
 	else
 	{
 		head = tail = y;
-		y = y->link;
+		y = y->next;
 	}
 
 	// Merge process
@@ -104,22 +104,22 @@ Node *mergeList(Node *x, Node *y)
 	{
 		if (x->data <= y->data)
 		{
-			tail->link = x;
-			x = x->link;
+			tail->next = x;
+			x = x->next;
 		}
 		else
 		{
-			tail->link = y;
-			y = y->link;
+			tail->next = y;
+			y = y->next;
 		}
-		tail = tail->link;
+		tail = tail->next;
 	}
 
 	// Append remaining nodes
 	if (x)
-		tail->link = x;
+		tail->next = x;
 	if (y)
-		tail->link = y;
+		tail->next = y;
 
 	return head;
 }
