@@ -25,9 +25,11 @@ int main()
 
 	Node *head = createRecursive(n);
 
-	printf("Traversing the list recursively:\n");
+	printf("Initial list: ");
 	traverseRecursive(head);
 	printf("NULL\n");
+
+	// You could add menu or other operations here later
 
 	freeListRecursive(head); // Free memory recursively
 	return 0;
