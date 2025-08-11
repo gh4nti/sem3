@@ -23,7 +23,7 @@ Write a menu-driven C program using structures to implement the following operat
 typedef struct Node
 {
 	int data;
-	struct Node *link;
+	struct Node *next;
 } Node;
 
 void swap(int *x, int *y);
@@ -44,12 +44,12 @@ int main()
 	if (head == NULL)
 		return -1;
 
-	head->link = createNode(50);
-	if (head->link == NULL)
+	head->next = createNode(50);
+	if (head->next == NULL)
 		return -1;
 
-	head->link->link = createNode(12);
-	if (head->link->link == NULL)
+	head->next->next = createNode(12);
+	if (head->next->next == NULL)
 		return -1;
 
 	int c, data, key;
@@ -108,7 +108,7 @@ int main()
 			while (head != NULL)
 			{
 				Node *temp = head;
-				head = head->link;
+				head = head->next;
 				free(temp);
 			}
 			return 0;
@@ -134,7 +134,7 @@ Node *createNode(int data)
 		return NULL;
 	}
 	temp->data = data;
-	temp->link = NULL;
+	temp->next = NULL;
 	return temp;
 }
 
@@ -146,24 +146,24 @@ void insertBefore(Node **head, int data, int key)
 
 	if (*head == NULL || (*head)->data == key)
 	{
-		temp->link = *head;
+		temp->next = *head;
 		*head = temp;
 		return;
 	}
 
 	Node *current = *head;
-	while (current->link != NULL && current->link->data != key)
-		current = current->link;
+	while (current->next != NULL && current->next->data != key)
+		current = current->next;
 
-	if (current->link == NULL)
+	if (current->next == NULL)
 	{
 		printf("Key %d not found in the list.\n", key);
 		free(temp);
 		return;
 	}
 
-	temp->link = current->link;
-	current->link = temp;
+	temp->next = current->next;
+	current->next = temp;
 }
 
 void insertAfter(Node **head, int data, int key)
@@ -174,7 +174,7 @@ void insertAfter(Node **head, int data, int key)
 
 	Node *current = *head;
 	while (current != NULL && current->data != key)
-		current = current->link;
+		current = current->next;
 
 	if (current == NULL)
 	{
@@ -183,8 +183,8 @@ void insertAfter(Node **head, int data, int key)
 		return;
 	}
 
-	temp->link = current->link;
-	current->link = temp;
+	temp->next = current->next;
+	current->next = temp;
 }
 
 void deleteNode(Node **head, int data)
@@ -200,7 +200,7 @@ void deleteNode(Node **head, int data)
 	while (temp != NULL && temp->data != data)
 	{
 		prev = temp;
-		temp = temp->link;
+		temp = temp->next;
 	}
 
 	if (temp == NULL)
@@ -210,9 +210,9 @@ void deleteNode(Node **head, int data)
 	}
 
 	if (prev == NULL)
-		*head = temp->link;
+		*head = temp->next;
 	else
-		prev->link = temp->link;
+		prev->next = temp->next;
 
 	free(temp);
 }
@@ -230,22 +230,22 @@ void traverseList(Node *head)
 	while (current != NULL)
 	{
 		printf("%d ", current->data);
-		current = current->link;
+		current = current->next;
 	}
 	printf("\n");
 }
 
 void reverseList(Node **head)
 {
-	if (*head == NULL || (*head)->link == NULL)
+	if (*head == NULL || (*head)->next == NULL)
 		return;
 
 	Node *prev = NULL, *curr = *head, *next = NULL;
 
 	while (curr != NULL)
 	{
-		next = curr->link;
-		curr->link = prev;
+		next = curr->next;
+		curr->next = prev;
 		prev = curr;
 		curr = next;
 	}
@@ -255,7 +255,7 @@ void reverseList(Node **head)
 
 void bubbleSortList(Node **head)
 {
-	if (*head == NULL || (*head)->link == NULL)
+	if (*head == NULL || (*head)->next == NULL)
 		return;
 
 	int swapped;
@@ -267,14 +267,14 @@ void bubbleSortList(Node **head)
 		swapped = 0;
 		ptr1 = *head;
 
-		while (ptr1->link != lptr)
+		while (ptr1->next != lptr)
 		{
-			if (ptr1->data > ptr1->link->data)
+			if (ptr1->data > ptr1->next->data)
 			{
-				swap(&ptr1->data, &ptr1->link->data);
+				swap(&ptr1->data, &ptr1->next->data);
 				swapped = 1;
 			}
-			ptr1 = ptr1->link;
+			ptr1 = ptr1->next;
 		}
 		lptr = ptr1;
 	} while (swapped);
@@ -282,18 +282,18 @@ void bubbleSortList(Node **head)
 
 void deleteAlternateNodes(Node **head)
 {
-	if (*head == NULL || (*head)->link == NULL)
+	if (*head == NULL || (*head)->next == NULL)
 		return;
 
 	Node *temp = *head;
 	Node *next;
 
-	while (temp != NULL && temp->link != NULL)
+	while (temp != NULL && temp->next != NULL)
 	{
-		next = temp->link;
-		temp->link = next->link;
+		next = temp->next;
+		temp->next = next->next;
 		free(next);
-		temp = temp->link;
+		temp = temp->next;
 	}
 }
 
@@ -305,15 +305,15 @@ void insertIntoSorted(Node **head, int data)
 
 	if (*head == NULL || (*head)->data >= data)
 	{
-		temp->link = *head;
+		temp->next = *head;
 		*head = temp;
 		return;
 	}
 
-	Node *curr = *head;
-	while (curr->link != NULL && curr->link->data < data)
-		curr = curr->link;
+	Node *current = *head;
+	while (current->next != NULL && current->next->data < data)
+		current = current->next;
 
-	temp->link = curr->link;
-	curr->link = temp;
+	temp->next = current->next;
+	current->next = temp;
 }
