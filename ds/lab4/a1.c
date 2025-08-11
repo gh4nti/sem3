@@ -10,7 +10,7 @@ ii) Traverse a linked list recursively
 typedef struct Node
 {
 	int data;
-	struct Node *link;
+	struct Node *next;
 } Node;
 
 Node *createRecursive(int n);
@@ -49,7 +49,7 @@ Node *createRecursive(int n)
 	printf("Enter data for node: ");
 	scanf("%d", &temp->data);
 
-	temp->link = createRecursive(n - 1); // recursive call for the rest
+	temp->next = createRecursive(n - 1); // recursive call for the rest
 	return temp;
 }
 
@@ -60,7 +60,7 @@ void traverseRecursive(Node *head)
 		return;
 
 	printf("%d -> ", head->data);
-	traverseRecursive(head->link);
+	traverseRecursive(head->next);
 }
 
 // Free linked list recursively
@@ -69,6 +69,6 @@ void freeListRecursive(Node *head)
 	if (head == NULL)
 		return;
 
-	freeListRecursive(head->link);
+	freeListRecursive(head->next);
 	free(head);
 }
