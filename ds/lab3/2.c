@@ -43,7 +43,6 @@ int main()
 	printStudent(students, n);
 
 	freeStudents(students, n);
-	free(students);
 	return 0;
 }
 
@@ -130,4 +129,5 @@ void freeStudents(Student *students, int n)
 	{
 		free((students + i)->name);
 	}
+	free(students);
 }
