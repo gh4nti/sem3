@@ -13,31 +13,31 @@ typedef struct Node
 	struct Node *link;
 } Node;
 
-Node *create(int data);
-void trav(Node *head);
+Node *createRecursive(int n);
+void traverseRecursive(Node *head);
+void freeListRecursive(Node *head);
 
 int main()
 {
-	Node *head = create(10);
-	head->link = create(20);
-	head->link->link = create(30);
-	head->link->link->link = NULL;
+	int n;
+	printf("Enter number of nodes: ");
+	scanf("%d", &n);
+
+	Node *head = createRecursive(n);
 
 	printf("Traversing the list recursively:\n");
-	trav(head);
-	free(head->link->link);
-	free(head->link);
-	free(head);
+	traverseRecursive(head);
+	printf("NULL\n");
+
+	freeListRecursive(head); // Free memory recursively
 	return 0;
 }
 
-// create a linked list recursively
-Node *create(int data)
+// Create linked list recursively
+Node *createRecursive(int n)
 {
-	if (data <= 0)
-	{
+	if (n <= 0)
 		return NULL;
-	}
 
 	Node *temp = (Node *)malloc(sizeof(Node));
 	if (!temp)
@@ -49,18 +49,26 @@ Node *create(int data)
 	printf("Enter data for node: ");
 	scanf("%d", &temp->data);
 
-	temp->link = create(data - 1);
+	temp->link = createRecursive(n - 1); // recursive call for the rest
 	return temp;
 }
 
-// traverse the linked list recursively
-void trav(Node *head)
+// Traverse linked list recursively
+void traverseRecursive(Node *head)
 {
 	if (head == NULL)
-	{
-		printf("NULL\n");
 		return;
-	}
-	printf("%d ", head->data);
-	trav(head->link);
+
+	printf("%d -> ", head->data);
+	traverseRecursive(head->link);
+}
+
+// Free linked list recursively
+void freeListRecursive(Node *head)
+{
+	if (head == NULL)
+		return;
+
+	freeListRecursive(head->link);
+	free(head);
 }
