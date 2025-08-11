@@ -40,23 +40,23 @@ int main()
 	fgets(str2, MAX, stdin);
 
 	// remove trailing newline character, if any
-	if (str1[stringLength(str1) - 1] == '\n')
-		str1[stringLength(str1) - 1] = '\0';
-	if (str2[stringLength(str2) - 1] == '\n')
-		str2[stringLength(str2) - 1] = '\0';
+	if (str1[strLength(str1) - 1] == '\n')
+		str1[strLength(str1) - 1] = '\0';
+	if (str2[strLength(str2) - 1] == '\n')
+		str2[strLength(str2) - 1] = '\0';
 
 	printf("\nString Operations:\n");
 
 	// Length
-	printf("Length of the first string: %d\n", stringLength(str1));
-	printf("Length of the second string: %d\n", stringLength(str2));
+	printf("Length of the first string: %d\n", strLength(str1));
+	printf("Length of the second string: %d\n", strLength(str2));
 
 	// Concatenation
-	stringConcat(res, str1, str2);
+	strConcat(res, str1, str2);
 	printf("Concatenated string: %s\n", res);
 
 	// Comparison
-	if (stringCompare(str1, str2))
+	if (strCompare(str1, str2))
 	{
 		printf("The strings are equal.\n");
 	}
@@ -73,11 +73,11 @@ int main()
 
 	printf("Enter the substring to insert: ");
 	fgets(sub, MAX, stdin);
-	sub[stringLength(sub) - 1] = '\0'; // Remove the newline character
+	sub[strLength(sub) - 1] = '\0'; // Remove the newline character
 
-	if (pos >= 0 && pos <= stringLength(str1))
+	if (pos >= 0 && pos <= strLength(str1))
 	{
-		stringInsert(str1, sub, pos);
+		strInsert(str1, sub, pos);
 		printf("String after insertion: %s\n", str1);
 	}
 
@@ -92,9 +92,9 @@ int main()
 	printf("Enter the length of the substring to delete: ");
 	scanf("%d", &len);
 
-	if (pos >= 0 && pos < stringLength(str1) && len >= 0 && pos + len <= stringLength(str1))
+	if (pos >= 0 && pos < strLength(str1) && len >= 0 && pos + len <= strLength(str1))
 	{
-		stringDelete(str1, pos, len);
+		strDelete(str1, pos, len);
 		printf("String after deletion: %s\n", str1);
 	}
 
