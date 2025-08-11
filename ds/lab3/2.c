@@ -11,10 +11,10 @@ typedef struct Student
 	char grade;
 } Student;
 
-void read(Student *students, int n);
-void display(Student *students, int n);
-void sort(Student *students, int n);
-void freeStudentMemory(Student *students, int n);
+void readStudent(Student *students, int n);
+void printStudent(Student *students, int n);
+void sortStudents(Student *students, int n);
+void freeStudents(Student *students, int n);
 
 int main()
 {
@@ -32,21 +32,21 @@ int main()
 		return -1;
 	}
 
-	read(students, n);
+	readStudent(students, n);
 
 	printf("Before sorting:\n");
-	display(students, n);
+	printStudent(students, n);
 
-	sort(students, n);
+	sortStudents(students, n);
 	printf("After sorting:\n");
-	display(students, n);
+	printStudent(students, n);
 
-	freeStudentMemory(students, n);
+	freeStudents(students, n);
 	free(students);
 	return 0;
 }
 
-void read(Student *students, int n)
+void readStudent(Student *students, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -85,7 +85,7 @@ void read(Student *students, int n)
 	}
 }
 
-void display(Student *students, int n)
+void printStudent(Student *students, int n)
 {
 	printf("\nStudent Information:\n");
 	for (int i = 0; i < n; i++)
@@ -99,7 +99,7 @@ void display(Student *students, int n)
 	}
 }
 
-void sort(Student *students, int n)
+void sortStudents(Student *students, int n)
 {
 	Student tmp;
 	for (int i = 0; i < n - 1; i++)
@@ -119,7 +119,7 @@ void sort(Student *students, int n)
 	}
 }
 
-void freeStudentMemory(Student *students, int n)
+void freeStudents(Student *students, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
