@@ -11,6 +11,7 @@ typedef struct Student
 	char grade;
 } Student;
 
+void swap(Student *x, Student *y);
 void readStudent(Student *students, int n);
 void printStudent(Student *students, int n);
 void sortStudents(Student *students, int n);
@@ -44,6 +45,13 @@ int main()
 	freeStudents(students, n);
 	free(students);
 	return 0;
+}
+
+void swap(Student *x, Student *y)
+{
+	Student temp = *x;
+	*x = *y;
+	*y = temp;
 }
 
 void readStudent(Student *students, int n)
@@ -111,9 +119,7 @@ void sortStudents(Student *students, int n)
 
 			if (student_i->roll_no > student_j->roll_no)
 			{
-				tmp = *student_i;
-				*student_i = *student_j;
-				*student_j = tmp;
+				swap(student_i, student_j);
 			}
 		}
 	}
