@@ -9,48 +9,52 @@ typedef struct Node
 	struct Node *link;
 } Node;
 
-Node *new(int data);
-void print(Node *head);
-Node *merge(Node *x, Node *y);
+Node *createNode(int data);
+void printList(Node *head);
+Node *mergeList(Node *x, Node *y);
+void freeList(Node *head);
 
 int main()
 {
 	// example list X: 1 -> 3 -> 5
-	Node *x = new(1);
-	x->link = new(3);
-	x->link->link = new(5);
+	Node *x = createNode(1);
+	x->link = createNode(3);
+	x->link->link = createNode(5);
 
 	// example list Y: 2 -> 4 -> 6
-	Node *y = new(2);
-	y->link = new(4);
-	y->link->link = new(6);
+	Node *y = createNode(2);
+	y->link = createNode(4);
+	y->link->link = createNode(6);
 
 	printf("X: ");
-	print(x);
+	printList(x);
 	printf("Y: ");
-	print(y);
+	printList(y);
 
-	Node *z = merge(x, y);
+	Node *z = mergeList(x, y);
 	printf("Z: ");
-	print(z);
+	printList(z);
 
-	free(x);
-	free(y);
-	free(z);
+	freeList(z); // free merged list
 	return 0;
 }
 
 // create a new node
-Node *new(int data)
+Node *createNode(int data)
 {
 	Node *temp = (Node *)malloc(sizeof(Node));
+	if (!temp)
+	{
+		printf("Memory allocation failed!\n");
+		exit(1);
+	}
 	temp->data = data;
 	temp->link = NULL;
 	return temp;
 }
 
 // print the list
-void print(Node *head)
+void printList(Node *head)
 {
 	Node *temp = head;
 	while (temp != NULL)
@@ -61,7 +65,19 @@ void print(Node *head)
 	printf("\n");
 }
 
-Node *merge(Node *x, Node *y)
+// free the list
+void freeList(Node *head)
+{
+	while (head)
+	{
+		Node *temp = head;
+		head = head->link;
+		free(temp);
+	}
+}
+
+// merge two sorted lists without creating new nodes
+Node *mergeList(Node *x, Node *y)
 {
 	if (!x)
 		return y;
@@ -71,17 +87,19 @@ Node *merge(Node *x, Node *y)
 	Node *head = NULL;
 	Node *tail = NULL;
 
+	// Initialize head and tail
 	if (x->data <= y->data)
 	{
-		head = x;
+		head = tail = x;
 		x = x->link;
 	}
 	else
 	{
-		head = y;
+		head = tail = y;
 		y = y->link;
 	}
 
+	// Merge process
 	while (x && y)
 	{
 		if (x->data <= y->data)
@@ -97,6 +115,7 @@ Node *merge(Node *x, Node *y)
 		tail = tail->link;
 	}
 
+	// Append remaining nodes
 	if (x)
 		tail->link = x;
 	if (y)
