@@ -12,6 +12,7 @@ typedef struct Node
 
 Node *createNode(int data);
 void insertAtRear(Node **head, Node **tail, int data);
+int linearSearch(Node *head, int data);
 void printList(Node *head);
 Node *unionLists(Node *head1, Node *head2);
 Node *intersectionLists(Node *head1, Node *head2);
@@ -85,6 +86,18 @@ void insertAtRear(Node **head, Node **tail, int data)
 	}
 }
 
+int linearSearch(Node *head, int data)
+{
+	Node *temp = head;
+	while (temp)
+	{
+		if (temp->data == data)
+			return 1;
+		temp = temp->next;
+	}
+	return 0;
+}
+
 // print list
 void printList(Node *head)
 {
@@ -111,7 +124,7 @@ Node *unionLists(Node *head1, Node *head2)
 	// Add all elements of first list
 	while (temp)
 	{
-		if (!search(unionHead, temp->data))
+		if (!linearSearch(unionHead, temp->data))
 			insertAtRear(&unionHead, &tailU, temp->data);
 		temp = temp->next;
 	}
@@ -120,7 +133,7 @@ Node *unionLists(Node *head1, Node *head2)
 	temp = head2;
 	while (temp)
 	{
-		if (!search(unionHead, temp->data))
+		if (!linearSearch(unionHead, temp->data))
 			insertAtRear(&unionHead, &tailU, temp->data);
 		temp = temp->next;
 	}
@@ -136,7 +149,7 @@ Node *intersectionLists(Node *head1, Node *head2)
 	// Add elements present in both lists
 	while (temp)
 	{
-		if (search(head2, temp->data) && !search(intersectionHead, temp->data))
+		if (linearSearch(head2, temp->data) && !linearSearch(intersectionHead, temp->data))
 			insertAtRear(&intersectionHead, &tailI, temp->data);
 		temp = temp->next;
 	}
