@@ -23,8 +23,7 @@ Write a menu-driven C program using structures to implement the following operat
 typedef struct Node
 {
 	int data;
-	struct Node *prev;
-	struct Node *next;
+	struct Node *prev, *next;
 } Node;
 
 Node *createNode(int data);
