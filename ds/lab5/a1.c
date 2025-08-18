@@ -12,7 +12,6 @@ typedef struct Node
 
 Node *createNode(int data);
 void insertAtRear(Node **head, Node **tail, int data);
-int linearSearch(Node *head, int data);
 void printList(Node *head);
 Node *unionLists(Node *head1, Node *head2);
 Node *intersectionLists(Node *head1, Node *head2);
@@ -84,19 +83,6 @@ void insertAtRear(Node **head, Node **tail, int data)
 		temp->prev = *tail;
 		*tail = temp;
 	}
-}
-
-// linear search
-int linearSearch(Node *head, int data)
-{
-	Node *temp = head;
-	while (temp)
-	{
-		if (temp->data == data)
-			return 1;
-		temp = temp->next;
-	}
-	return 0;
 }
 
 // print list
