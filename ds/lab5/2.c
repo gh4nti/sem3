@@ -23,6 +23,8 @@ int main()
 	printf("Enter number of elements in X1: ");
 	scanf("%d", &n1);
 
+	printf("Enter elements of X1:\n");
+
 	for (int i = 0; i < n1; i++)
 	{
 		printf("Element %d: ", i + 1);
@@ -32,6 +34,8 @@ int main()
 
 	printf("Enter number of elements in X2: ");
 	scanf("%d", &n2);
+
+	printf("Enter elements of X2:\n");
 
 	for (int i = 0; i < n2; i++)
 	{
