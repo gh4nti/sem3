@@ -1,28 +1,29 @@
 /*
-Multiply two polynomials using circular doubly linked list (with Header Node)
-i. Represent each polynomial using a circular doubly linked list with a header node.
-ii. Multiply each term of the first polynomial with every term of the second polynomial.
-iii. Merge like terms during or after multiplication.
+Add Two Polynomials Represented as Doubly Linked Lists.
+i) Represent each polynomial using a doubly linked list, where each node contains the coefficient and exponent of a term.
+ii) Write a function to add two polynomials by merging terms with equal exponents. The resulting polynomial should be stored in a new doubly linked list, maintaining the order of terms in descending powers of exponents.
+iii) Display all three polynomials: the two input polynomials and their sum. Ensure dynamic memory allocation is used for all node operations and that both prev and next pointers are maintained correctly.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Term
+typedef struct Node
 {
-	int coeff, exp;
-	struct Term *prev, *next;
-} Term;
+	int coeff;
+	int exp;
+	struct Node *prev, *next;
+} Node;
 
-Term *createHeader();
-void insertTerm(Term *header, int coeff, int exp);
-Term *multiplyPolynomials(Term *p1, Term *p2);
-void printPolynomial(Term *header);
-void freePolynomial(Term *header);
+Node *createNode(int coeff, int exp);
+void insertSorted(Node **head, int coeff, int exp);
+Node *addPolynomials(Node *poly1, Node *poly2);
+void printPolynomial(Node *head);
+void freePolynomial(Node **head);
 
 int main()
 {
-	Term *p1 = createHeader(), *p2 = createHeader();
+	Node *p1 = NULL, *p2 = NULL;
 
 	int n1;
 	printf("Enter number of terms in first polynomial: ");
@@ -32,7 +33,7 @@ int main()
 		int c, e;
 		printf("Enter coeff and exp for term %d: ", i + 1);
 		scanf("%d %d", &c, &e);
-		insertTerm(p1, c, e);
+		insertSorted(&p1, c, e);
 	}
 
 	int n2;
@@ -43,108 +44,194 @@ int main()
 		int c, e;
 		printf("Enter coeff and exp for term %d: ", i + 1);
 		scanf("%d %d", &c, &e);
-		insertTerm(p2, c, e);
+		insertSorted(&p2, c, e);
 	}
 
+	Node *sum = addPolynomials(p1, p2);
+
 	printf("First polynomial: ");
-	displayPoly(p1);
+	printPolynomial(p1);
 
 	printf("Second polynomial: ");
-	displayPoly(p2);
+	printPolynomial(p2);
 
-	Term *result = multiplyPolynomials(p1, p2);
+	printf("Sum: ");
+	printPolynomial(sum);
 
-	printf("Product: ");
-	displayPoly(result);
-
-	freePoly(p1);
-	freePoly(p2);
-	freePoly(result);
+	freePolynomial(&p1);
+	freePolynomial(&p2);
+	freePolynomial(&sum);
 
 	return 0;
 }
 
-Term *createHeader()
+Node *createNode(int coeff, int exp)
 {
-	Term *header = (Term *)malloc(sizeof(Term));
-	if (header == NULL)
+	Node *newNode = (Node *)malloc(sizeof(Node));
+	if (newNode == NULL)
 	{
-		printf("Memory allocation failed\n");
+		printf("Memory allocation failed!\n");
 		exit(1);
 	}
-	header->next = header;
-	header->prev = header;
-	header->coeff = 0;
-	header->exp = -1;
-	return header;
+	newNode->coeff = coeff;
+	newNode->exp = exp;
+	newNode->prev = NULL;
+	newNode->next = NULL;
+	return newNode;
 }
 
-void insertTerm(Term *header, int coeff, int exp)
+void insertSorted(Node **head, int coeff, int exp)
 {
 	if (coeff == 0)
 		return;
 
-	Term *curr = header->next;
-	while (curr != header && curr->exp > exp)
+	Node *newNode = createNode(coeff, exp);
+	if (*head == NULL)
 	{
+		*head = newNode;
+		return;
+	}
+
+	Node *curr = *head;
+	Node *prev = NULL;
+	while (curr && curr->exp > exp)
+	{
+		prev = curr;
 		curr = curr->next;
 	}
 
-	if (curr != header && curr->exp == exp)
+	if (curr && curr->exp == exp)
 	{
 		curr->coeff += coeff;
+		free(newNode);
 		if (curr->coeff == 0)
 		{
-			curr->prev->next = curr->next;
-			curr->next->prev = curr->prev;
+			if (prev)
+			{
+				prev->next = curr->next;
+			}
+			else
+			{
+				*head = curr->next;
+			}
+			if (curr->next)
+			{
+				curr->next->prev = prev;
+			}
 			free(curr);
 		}
 		return;
 	}
 
-	Term *temp = (Term *)malloc(sizeof(Term));
-	if (temp == NULL)
+	newNode->next = curr;
+	newNode->prev = prev;
+	if (curr)
 	{
-		printf("Memory allocation failed\n");
-		exit(1);
+		curr->prev = newNode;
 	}
-	temp->coeff = coeff;
-	temp->exp = exp;
-	temp->next = curr;
-	temp->prev = curr->prev;
-	curr->prev->next = temp;
-	curr->prev = temp;
+	if (prev)
+	{
+		prev->next = newNode;
+	}
+	else
+	{
+		*head = newNode;
+	}
 }
 
-Term *multiplyPolynomials(Term *p1, Term *p2)
+Node *addPolynomials(Node *poly1, Node *poly2)
 {
-	Term *result = createHeader();
-	Term *term1 = p1->next;
-	while (term1 != p1)
+	Node *result = NULL;
+	Node *tail = NULL;
+	Node *p1 = poly1;
+	Node *p2 = poly2;
+
+	while (p1 && p2)
 	{
-		Term *term2 = p2->next;
-		while (term2 != p2)
+		int coeff, exp_val;
+		if (p1->exp > p2->exp)
 		{
-			int newCoeff = term1->coeff * term2->coeff;
-			int newExp = term1->exp + term2->exp;
-			insertTerm(result, newCoeff, newExp);
-			term2 = term2->next;
+			coeff = p1->coeff;
+			exp_val = p1->exp;
+			p1 = p1->next;
 		}
-		term1 = term1->next;
+		else if (p2->exp > p1->exp)
+		{
+			coeff = p2->coeff;
+			exp_val = p2->exp;
+			p2 = p2->next;
+		}
+		else
+		{
+			coeff = p1->coeff + p2->coeff;
+			exp_val = p1->exp;
+			p1 = p1->next;
+			p2 = p2->next;
+			if (coeff == 0)
+				continue;
+		}
+
+		Node *newNode = createNode(coeff, exp_val);
+		if (result == NULL)
+		{
+			result = newNode;
+			tail = newNode;
+		}
+		else
+		{
+			tail->next = newNode;
+			newNode->prev = tail;
+			tail = newNode;
+		}
 	}
+
+	while (p1)
+	{
+		Node *newNode = createNode(p1->coeff, p1->exp);
+		if (result == NULL)
+		{
+			result = newNode;
+			tail = newNode;
+		}
+		else
+		{
+			tail->next = newNode;
+			newNode->prev = tail;
+			tail = newNode;
+		}
+		p1 = p1->next;
+	}
+
+	while (p2)
+	{
+		Node *newNode = createNode(p2->coeff, p2->exp);
+		if (result == NULL)
+		{
+			result = newNode;
+			tail = newNode;
+		}
+		else
+		{
+			tail->next = newNode;
+			newNode->prev = tail;
+			tail = newNode;
+		}
+		p2 = p2->next;
+	}
+
 	return result;
 }
 
-void printPolynomial(Term *header)
+void printPolynomial(Node *head)
 {
-	Term *curr = header->next;
-	if (curr == header)
+	if (head == NULL)
 	{
 		printf("0\n");
 		return;
 	}
+	Node *curr = head;
 	int first = 1;
-	while (curr != header)
+	while (curr)
 	{
 		int abs_coeff = abs(curr->coeff);
 		if (!first)
@@ -174,14 +261,14 @@ void printPolynomial(Term *header)
 	printf("\n");
 }
 
-void freePolynomial(Term *header)
+void freePolynomial(Node **head)
 {
-	Term *curr = header->next;
-	while (curr != header)
+	Node *curr = *head;
+	while (curr)
 	{
-		Term *temp = curr;
+		Node *temp = curr;
 		curr = curr->next;
 		free(temp);
 	}
-	free(header);
+	*head = NULL;
 }

@@ -1,8 +1,9 @@
 /*
-Write a menu-driven C program to perform the following operations on a Circular Doubly Linked List:
-i) Insert an element into the list
-ii) Delete an element from the list
-iii) Display the elements of the list
+Write a C program to implement a Circular Singly Linked List using First and Last pointers.
+Implement the following operations:
+i. Insertion at the end of the list using First and Last pointers.
+ii. Deletion from the beginning or end using First and Last pointers.
+iii. Display the list after each operation.
 */
 
 #include <stdio.h>
@@ -12,51 +13,57 @@ typedef struct Node
 {
 	int data;
 	struct Node *next;
-	struct Node *prev;
 } Node;
 
 Node *createNode(int data);
-Node *insertNode(Node *head, int data);
-Node *deleteNode(Node *head, int data);
-void printList(Node *head);
-void freeList(Node **head);
+void insertAtEnd(Node **first, Node **last, int data);
+void deleteAtBeginning(Node **first, Node **last);
+void deleteAtEnd(Node **first, Node **last);
+void printList(Node *first, Node *last);
+void freeList(Node **first, Node **last);
 
 int main()
 {
-	Node *head = NULL;
-	int c, data;
+	Node *first = NULL;
+	Node *last = NULL;
+	int choice, data;
 
 	while (1)
 	{
-		printf("\nCircular Doubly Linked List Operations:\n");
-		printf("1. Insert an element\n");
-		printf("2. Delete an element\n");
-		printf("3. Display the list\n");
-		printf("4. Exit\n");
+		printf("\nCircular Singly Linked List Operations:\n");
+		printf("1. Insert at end\n");
+		printf("2. Delete from beginning\n");
+		printf("3. Delete from end\n");
+		printf("4. Display list\n");
+		printf("5. Exit\n");
 		printf("Enter your choice: ");
-		scanf("%d", &c);
+		scanf("%d", &choice);
 
-		switch (c)
+		switch (choice)
 		{
 		case 1:
 			printf("Enter the element to insert: ");
 			scanf("%d", &data);
-			head = insertNode(head, data);
-			printf("Element %d inserted successfully.\n", data);
+			insertEnd(&first, &last, data);
+			displayList(first, last);
 			break;
 
 		case 2:
-			printf("Enter the element to delete: ");
-			scanf("%d", &data);
-			head = deleteNode(head, data);
+			deleteBeginning(&first, &last);
+			displayList(first, last);
 			break;
 
 		case 3:
-			displayList(head);
+			deleteEnd(&first, &last);
+			displayList(first, last);
 			break;
 
 		case 4:
-			freeList(&head);
+			displayList(first, last);
+			break;
+
+		case 5:
+			freeList(&first, &last);
 			printf("List freed and program exiting.\n");
 			return 0;
 
@@ -64,97 +71,121 @@ int main()
 			printf("Invalid choice! Please try again.\n");
 		}
 	}
+	return 0;
 }
 
 Node *createNode(int data)
 {
-	Node *temp = (struct Node *)malloc(sizeof(struct Node));
-	if (temp == NULL)
+	Node *newNode = (Node *)malloc(sizeof(Node));
+	if (newNode == NULL)
 	{
 		printf("Memory allocation failed!\n");
 		exit(1);
 	}
-	temp->data = data;
-	temp->next = NULL;
-	temp->prev = NULL;
-	return temp;
+	newNode->data = data;
+	newNode->next = NULL;
+	return newNode;
 }
 
-Node *insertNode(Node *head, int data)
+void insertAtEnd(Node **first, Node **last, int data)
 {
-	struct Node *temp = createNode(data);
-	if (head == NULL)
+	Node *newNode = createNode(data);
+
+	if (*first == NULL)
 	{
-		head = temp;
-		head->next = head;
-		head->prev = head;
+		*first = newNode;
+		*last = newNode;
+		newNode->next = *first;
 	}
 	else
 	{
-		struct Node *last = head->prev;
-
-		temp->next = head;
-		temp->prev = last;
-		last->next = temp;
-		head->prev = temp;
+		newNode->next = *first;
+		(*last)->next = newNode;
+		*last = newNode;
 	}
-	return head;
+	printf("Inserted %d at the end.\n", data);
 }
 
-Node *deleteNode(Node *head, int data)
+void deleteAtBeginning(Node **first, Node **last)
 {
-	if (head == NULL)
+	if (*first == NULL)
+	{
+		printf("List is empty! Cannot delete.\n");
+		return;
+	}
+
+	Node *temp = *first;
+
+	if (*first == *last)
+	{
+		*first = NULL;
+		*last = NULL;
+	}
+	else
+	{
+		*first = (*first)->next;
+		(*last)->next = *first;
+	}
+
+	printf("Deleted %d from the beginning.\n", temp->data);
+	free(temp);
+}
+
+void deleteAtEnd(Node **first, Node **last)
+{
+	if (*first == NULL)
+	{
+		printf("List is empty! Cannot delete.\n");
+		return;
+	}
+
+	if (*first == *last)
+	{
+		printf("Deleted %d from the end.\n", (*first)->data);
+		free(*first);
+		*first = NULL;
+		*last = NULL;
+		return;
+	}
+
+	Node *current = *first;
+	while (current->next != *last)
+	{
+		current = current->next;
+	}
+
+	printf("Deleted %d from the end.\n", (*last)->data);
+	free(*last);
+	*last = current;
+	(*last)->next = *first;
+}
+
+void printList(Node *first, Node *last)
+{
+	if (first == NULL)
 	{
 		printf("List is empty!\n");
-		return head;
+		return;
 	}
 
-	struct Node *current = head;
-	struct Node *toDelete = NULL;
-
+	Node *current = first;
+	printf("List elements: ");
 	do
 	{
-		if (current->data == data)
-		{
-			toDelete = current;
-			break;
-		}
+		printf("%d ", current->data);
 		current = current->next;
-	} while (current != head);
-
-	if (toDelete == NULL)
-	{
-		printf("Element %d not found in the list!\n", data);
-		return head;
-	}
-
-	if (toDelete->next == toDelete)
-	{
-		free(toDelete);
-		return NULL;
-	}
-
-	toDelete->prev->next = toDelete->next;
-	toDelete->next->prev = toDelete->prev;
-
-	if (toDelete == head)
-	{
-		head = toDelete->next;
-	}
-
-	free(toDelete);
-	return head;
+	} while (current != first);
+	printf("\n");
 }
 
-void freeList(Node **head)
+void freeList(Node **first, Node **last)
 {
-	if (*head == NULL)
+	if (*first == NULL)
 		return;
 
-	Node *current = *head;
+	Node *current = *first;
 	Node *next;
-
-	current->prev->next = NULL;
+	(*last)->next = NULL;
 
 	while (current != NULL)
 	{
@@ -163,5 +194,6 @@ void freeList(Node **head)
 		current = next;
 	}
 
-	*head = NULL;
+	*first = NULL;
+	*last = NULL;
 }
