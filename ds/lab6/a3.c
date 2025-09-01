@@ -60,11 +60,12 @@ int main()
 			break;
 
 		case 3:
-			displayQueue(&queue);
+			printQueue(&queue);
 			break;
 
 		case 4:
 			freeList(&queue);
+			free(name);
 			printf("Queue freed and program exiting.\n");
 			return 0;
 
