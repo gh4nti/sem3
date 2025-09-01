@@ -11,7 +11,7 @@ iii) Display the elements of the list
 typedef struct Node
 {
 	int data;
-	struct Node *prev, next;
+	struct Node *prev, *next;
 } Node;
 
 Node *createNode(int data);
@@ -51,7 +51,7 @@ int main()
 			break;
 
 		case 3:
-			displayList(head);
+			printList(head);
 			break;
 
 		case 4:
