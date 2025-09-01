@@ -45,17 +45,17 @@ int main()
 			printf("Enter the element to insert: ");
 			scanf("%d", &data);
 			insertAtEnd(&first, &last, data);
-			displayList(first, last);
+			printList(first, last);
 			break;
 
 		case 2:
 			deleteAtBeginning(&first, &last);
-			displayList(first, last);
+			printList(first, last);
 			break;
 
 		case 3:
 			deleteAtEnd(&first, &last);
-			displayList(first, last);
+			printList(first, last);
 			break;
 
 		case 4:
