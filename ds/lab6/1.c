@@ -44,22 +44,22 @@ int main()
 		case 1:
 			printf("Enter the element to insert: ");
 			scanf("%d", &data);
-			insertEnd(&first, &last, data);
+			insertAtEnd(&first, &last, data);
 			displayList(first, last);
 			break;
 
 		case 2:
-			deleteBeginning(&first, &last);
+			deleteAtBeginning(&first, &last);
 			displayList(first, last);
 			break;
 
 		case 3:
-			deleteEnd(&first, &last);
+			deleteAtEnd(&first, &last);
 			displayList(first, last);
 			break;
 
 		case 4:
-			displayList(first, last);
+			printList(first, last);
 			break;
 
 		case 5:
