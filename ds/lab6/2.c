@@ -142,80 +142,38 @@ void insertSorted(Node **head, int coeff, int exp)
 Node *addPolynomials(Node *poly1, Node *poly2)
 {
 	Node *result = NULL;
-	Node *tail = NULL;
-	Node *p1 = poly1;
-	Node *p2 = poly2;
+	Node *p1 = poly1, *p2 = poly2;
 
 	while (p1 && p2)
 	{
-		int coeff, exp_val;
 		if (p1->exp > p2->exp)
 		{
-			coeff = p1->coeff;
-			exp_val = p1->exp;
+			insertSorted(&result, p1->coeff, p1->exp);
 			p1 = p1->next;
 		}
 		else if (p2->exp > p1->exp)
 		{
-			coeff = p2->coeff;
-			exp_val = p2->exp;
+			insertSorted(&result, p2->coeff, p2->exp);
 			p2 = p2->next;
 		}
 		else
 		{
-			coeff = p1->coeff + p2->coeff;
-			exp_val = p1->exp;
+			int coeff = p1->coeff + p2->coeff;
+			if (coeff != 0)
+				insertSorted(&result, coeff, p1->exp);
 			p1 = p1->next;
 			p2 = p2->next;
-			if (coeff == 0)
-				continue;
-		}
-
-		Node *newNode = createNode(coeff, exp_val);
-		if (result == NULL)
-		{
-			result = newNode;
-			tail = newNode;
-		}
-		else
-		{
-			tail->next = newNode;
-			newNode->prev = tail;
-			tail = newNode;
 		}
 	}
 
 	while (p1)
 	{
-		Node *newNode = createNode(p1->coeff, p1->exp);
-		if (result == NULL)
-		{
-			result = newNode;
-			tail = newNode;
-		}
-		else
-		{
-			tail->next = newNode;
-			newNode->prev = tail;
-			tail = newNode;
-		}
+		insertSorted(&result, p1->coeff, p1->exp);
 		p1 = p1->next;
 	}
-
 	while (p2)
 	{
-		Node *newNode = createNode(p2->coeff, p2->exp);
-		if (result == NULL)
-		{
-			result = newNode;
-			tail = newNode;
-		}
-		else
-		{
-			tail->next = newNode;
-			newNode->prev = tail;
-			tail = newNode;
-		}
+		insertSorted(&result, p2->coeff, p2->exp);
 		p2 = p2->next;
 	}
 
