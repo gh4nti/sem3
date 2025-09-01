@@ -180,7 +180,7 @@ void printList(Node *first, Node *last)
 
 void freeList(Node **first, Node **last)
 {
-	if (*first == NULL)
+	if (*first == NULL || *last == NULL)
 		return;
 
 	Node *current = *first;
@@ -197,3 +197,4 @@ void freeList(Node **first, Node **last)
 	*first = NULL;
 	*last = NULL;
 }
+
