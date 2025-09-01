@@ -47,19 +47,19 @@ int main()
 	}
 
 	printf("First polynomial: ");
-	displayPoly(p1);
+	printPolynomial(p1);
 
 	printf("Second polynomial: ");
-	displayPoly(p2);
+	printPolynomial(p2);
 
 	Term *result = multiplyPolynomials(p1, p2);
 
 	printf("Product: ");
-	displayPoly(result);
+	printPolynomial(result);
 
-	freePoly(p1);
-	freePoly(p2);
-	freePoly(result);
+	freePolynomial(p1);
+	freePolynomial(p2);
+	freePolynomial(result);
 
 	return 0;
 }
