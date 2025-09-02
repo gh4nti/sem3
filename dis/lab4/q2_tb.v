@@ -15,8 +15,6 @@ module q2_tb;
 		.cout(cout)
 	);
 
-	integer i, j;
-
 	initial begin
 		$dumpfile("q2_tb.vcd");
 		$dumpvars(0, q2_tb);
