@@ -27,7 +27,7 @@ module q2(a, b, c, d, f);
 	nor (t3, nt3_tmp, nt3_tmp);
 
 	// f = t1 * t2 * t3
-	wire nt1, nt2, nt3, t12;
+	wire nt1, nt2, nt3;
 	nor (nt1, t1, t1);
 	nor (nt2, t2, t2);
 	nor (nt3, t3, t3);
