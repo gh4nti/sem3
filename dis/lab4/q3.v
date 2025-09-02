@@ -1,6 +1,5 @@
 module q3 (
-    input [1:0] a,
-    input [1:0] b,
+    input [1:0] a, b,
     output [3:0] p
 );
 

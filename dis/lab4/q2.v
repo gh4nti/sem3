@@ -1,6 +1,5 @@
 module q2 (
-	input [3:0] a,
-	input [3:0] b,
+	input [3:0] a, b,
 	input mode,
 	output [3:0] result,
 	output cout
@@ -19,8 +18,7 @@ module q2 (
 endmodule
 
 module fourbitadder (
-	input [3:0] a,
-	input [3:0] b,
+	input [3:0] a, b,
 	input cin,
 	output [3:0] sum,
 	output cout
