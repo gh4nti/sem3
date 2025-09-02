@@ -24,6 +24,7 @@ module q4 (
     assign sum  = corrected_sum[3:0];
     assign cout = corrected_sum[4];
 endmodule
+
 module fourbitadder (
 	input [3:0] a,
 	input [3:0] b,
