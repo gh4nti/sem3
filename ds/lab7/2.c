@@ -12,236 +12,209 @@ ii. Evaluate a postfix expression using stack.
 
 typedef struct Node
 {
-	char data;
+	int data;
 	struct Node *next;
 } Node;
 
-typedef struct Stack
-{
-	Node *top;
-} Stack;
+Node *top = NULL;
 
-typedef struct NodeInt
-{
-	int data;
-	struct NodeInt *next;
-} NodeInt;
-
-typedef struct StackInt
-{
-	NodeInt *top;
-} StackInt;
-
-void init(Stack *s);
-int isEmpty(Stack *s);
-void push(Stack *s, char c);
-char pop(Stack *s);
-char peek(Stack *s);
+int isEmpty();
+void push(int data);
+int pop();
+int peek();
 int precedence(char op);
-int isOperator(char c);
-void infixToPostfix(char *infix, char *postfix);
-
-void initInt(StackInt *s);
-int isEmptyInt(StackInt *s);
-int popInt(StackInt *s);
-
-int evaluatePostfix(char *postfix);
+void infixToPostfix(char *infix);
+void evaluatePostfix(char *postfix);
 
 int main()
 {
-	char *infix = (char *)malloc(200 * sizeof(char));
-	char *postfix = (char *)malloc(200 * sizeof(char));
+	int c;
+	char *expr = (char *)malloc(100 * sizeof(char));
 
-	printf("Enter an infix expression: ");
-	fgets(infix, sizeof(infix), stdin);
-
-	int len = strlen(infix);
-	if (len > 0 && infix[len - 1] == '\n')
+	while (1)
 	{
-		infix[len - 1] = '\0';
+		printf("\n--- Stack Operations Menu ---\n");
+		printf("1. Infix to Postfix Conversion\n");
+		printf("2. Postfix Expression Evaluation\n");
+		printf("3. Exit\n");
+		printf("Enter your choice: ");
+
+		if (scanf("%d", &c) != 1)
+		{
+			while (getchar() != '\n')
+				;
+			printf("Invalid input. Please enter a number.\n");
+			continue;
+		}
+
+		switch (c)
+		{
+		case 1:
+			printf("Enter an infix expression: ");
+			scanf("%s", expr);
+			infixToPostfix(expr);
+			break;
+		case 2:
+			printf("Enter a postfix expression: ");
+			scanf("%s", expr);
+			evaluatePostfix(expr);
+			break;
+		case 3:
+			printf("Exiting program.\n");
+			while (!isEmpty())
+				pop();
+
+			exit(0);
+		default:
+			printf("Invalid choice. Please try again.\n");
+		}
 	}
-
-	infixToPostfix(infix, postfix);
-	printf("Postfix Expression: %s\n", postfix);
-
-	printf("Evaluating postfix expression...\n");
-	int result = evaluatePostfix(postfix);
-	printf("Result = %d\n", result);
 
 	return 0;
 }
 
-void init(Stack *s)
+int isEmpty()
 {
-	s->top = NULL;
+	return top == NULL;
 }
 
-int isEmpty(Stack *s)
+void push(int data)
 {
-	return s->top == NULL;
+	Node *new = (Node *)malloc(sizeof(Node));
+
+	if (!new)
+		return;
+
+	new->data = data;
+	new->next = top;
+	top = new;
 }
 
-void push(Stack *s, char c)
+int pop()
 {
-	Node *newNode = (Node *)malloc(sizeof(Node));
-	newNode->data = c;
-	newNode->next = s->top;
-	s->top = newNode;
-}
+	if (isEmpty())
+		return -1;
 
-char pop(Stack *s)
-{
-	if (isEmpty(s))
-		return '\0';
-	Node *temp = s->top;
-	char c = temp->data;
-	s->top = temp->next;
+	Node *temp = top;
+	int popped = temp->data;
+	top = top->next;
 	free(temp);
-	return c;
+
+	return popped;
 }
 
-char peek(Stack *s)
+int peek()
 {
-	if (isEmpty(s))
-		return '\0';
-	return s->top->data;
+	if (isEmpty())
+		return -1;
+
+	return top->data;
 }
 
 int precedence(char op)
 {
-	if (op == '+' || op == '-')
-		return 1;
-	if (op == '*' || op == '/')
-		return 2;
-	if (op == '^')
+	switch (op)
+	{
+	case '^':
 		return 3;
-	return 0;
+	case '*':
+	case '/':
+		return 2;
+	case '+':
+	case '-':
+		return 1;
+	default:
+		return 0;
+	}
 }
 
-int isOperator(char c)
+void infixToPostfix(char *infix)
 {
-	return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
-}
-
-void infixToPostfix(char *infix, char *postfix)
-{
-	Stack s;
-	init(&s);
+	char postfix[strlen(infix) + 1];
 	int k = 0;
 
-	for (int i = 0; infix[i] != '\0'; i++)
+	for (int i = 0; i < strlen(infix); i++)
 	{
 		char c = infix[i];
 
 		if (isalnum(c))
-		{
 			postfix[k++] = c;
-		}
+
 		else if (c == '(')
-		{
-			push(&s, c);
-		}
+			push(c);
+
 		else if (c == ')')
 		{
-			while (!isEmpty(&s) && peek(&s) != '(')
-			{
-				postfix[k++] = pop(&s);
-			}
-			pop(&s);
+			while (!isEmpty() && peek() != '(')
+				postfix[k++] = pop();
+
+			if (!isEmpty() && peek() == '(')
+				pop();
 		}
-		else if (isOperator(c))
+
+		else
 		{
-			while (!isEmpty(&s) && precedence(peek(&s)) >= precedence(c))
-			{
-				postfix[k++] = pop(&s);
-			}
-			push(&s, c);
+			while (!isEmpty() && precedence(c) <= precedence(peek()))
+				postfix[k++] = pop();
+
+			push(c);
 		}
 	}
 
-	while (!isEmpty(&s))
-	{
-		postfix[k++] = pop(&s);
-	}
+	while (!isEmpty())
+		postfix[k++] = pop();
 
 	postfix[k] = '\0';
 }
 
-void initInt(StackInt *s)
+void evaluatePostfix(char *postfix)
 {
-	s->top = NULL;
-}
-
-int isEmptyInt(StackInt *s)
-{
-	return s->top == NULL;
-}
-
-void pushInt(StackInt *s, int val)
-{
-	NodeInt *newNode = (NodeInt *)malloc(sizeof(NodeInt));
-	newNode->data = val;
-	newNode->next = s->top;
-	s->top = newNode;
-}
-
-int popInt(StackInt *s)
-{
-	if (isEmptyInt(s))
-		return 0;
-	NodeInt *temp = s->top;
-	int val = temp->data;
-	s->top = temp->next;
-	free(temp);
-	return val;
-}
-
-int evaluatePostfix(char *postfix)
-{
-	StackInt s;
-	initInt(&s);
-
-	for (int i = 0; postfix[i] != '\0'; i++)
+	for (int i = 0; i < strlen(postfix); i++)
 	{
 		char c = postfix[i];
 
 		if (isdigit(c))
+			push(c - '0');
+
+		else
 		{
-			pushInt(&s, c - '0');
-		}
-		else if (isOperator(c))
-		{
-			int val2 = popInt(&s);
-			int val1 = popInt(&s);
-			int res;
+			int b = pop(), a = pop();
+
+			if (a == -1 || b == -1)
+			{
+				while (!isEmpty())
+					pop();
+
+				return;
+			}
 
 			switch (c)
 			{
 			case '+':
-				res = val1 + val2;
+				push(a + b);
 				break;
 			case '-':
-				res = val1 - val2;
+				push(a - b);
 				break;
 			case '*':
-				res = val1 * val2;
+				push(a * b);
 				break;
 			case '/':
-				res = val1 / val2;
+				push(a / b);
 				break;
-			case '^':
-			{
-				res = 1;
-				for (int j = 0; j < val2; j++)
-					res *= val1;
-				break;
-			}
 			default:
-				res = 0;
+				return;
 			}
-			pushInt(&s, res);
 		}
 	}
 
-	return popInt(&s);
+	int result = pop();
+
+	if (!isEmpty())
+	{
+		while (!isEmpty())
+			pop();
+	}
+	else
+		printf("%d\n", result);
 }

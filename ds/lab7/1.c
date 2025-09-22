@@ -8,171 +8,116 @@ ii. Check for matching parentheses in each expression.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#define MAX 100
 
-typedef struct Stack
-{
-	char *arr;
-	int top, capacity;
-} Stack;
+char arr[MAX];
+int top = -1;
 
-void init(Stack *s, int capacity);
-void freeStack(Stack *s);
-int isEmpty(Stack *s);
-int isFull(Stack *s);
-void resize(Stack *s);
-void push(Stack *s, char c);
-char pop(Stack *s);
-char peek(Stack *s);
-void removeNewLineChar(char *str);
+int isEmpty();
+int isFull();
+void push(char c);
+char pop();
+char peek();
 int isPalindrome(char *str);
-int isMatchingPair(char open, char close);
-int areParenthesesBalanced(char *expr);
+int isBalanced(char *expr);
 
 int main()
 {
-	char *str = (char *)malloc(200 * sizeof(char));
-	char *expr = (char *)malloc(200 * sizeof(char));
-
+	char *str = (char *)malloc(MAX * sizeof(char));
+	char *expr = (char *)malloc(MAX * sizeof(char));
 	printf("Enter a string: ");
-	if (fgets(str, sizeof(str), stdin))
-	{
-		removeNewLineChar(str);
-	}
+	fgets(str, MAX, stdin);
+	str[strcspn(str, "\n")] = '\0';
+
+	printf("Enter an expression: ");
+	fgets(expr, MAX, stdin);
+	expr[strcspn(expr, "\n")] = '\0';
 
 	if (isPalindrome(str))
 		printf("%s is a palindrome.\n", str);
+
 	else
 		printf("%s is not a palindrome.\n", str);
 
-	printf("\nEnter an expression: ");
-	if (fgets(expr, sizeof(expr), stdin))
-		removeNewLineChar(expr);
+	if (isBalanced(expr))
+		printf("%s is balanced.\n", expr);
 
-	if (areParenthesesBalanced(expr))
-		printf("Parentheses are balanced.\n");
 	else
-		printf("Parentheses are NOT balanced.\n");
-
-	return 0;
+		printf("%s is not balanced.\n", expr);
 }
 
-void init(Stack *s, int capacity)
+int isEmpty()
 {
-	s->arr = (char *)malloc(capacity * sizeof(char));
-	s->top = -1;
-	s->capacity = capacity;
+	return top == -1;
 }
 
-void freeStack(Stack *s)
+int isFull()
 {
-	free(s->arr);
-	s->arr = NULL;
-	s->top = -1;
-	s->capacity = 0;
+	return top == MAX - 1;
 }
 
-int isEmpty(Stack *s)
+void push(char c)
 {
-	return s->top == -1;
+	if (isFull())
+		return;
+	arr[++top] = c;
 }
 
-int isFull(Stack *s)
+char pop()
 {
-	return s->top == s->capacity - 1;
+	if (isEmpty())
+		return '\0';
+	return arr[top--];
 }
 
-void resize(Stack *s)
+char peek()
 {
-	s->capacity *= 2;
-	s->arr = (char *)realloc(s->arr, s->capacity * sizeof(char));
-}
-
-void push(Stack *s, char c)
-{
-	if (isFull(s))
-		resize(s);
-	s->arr[++(s->top)] = c;
-}
-
-char pop(Stack *s)
-{
-	if (!isEmpty(s))
-	{
-		return s->arr[(s->top)--];
-	}
-	return '\0';
-}
-
-char peek(Stack *s)
-{
-	if (!isEmpty(s))
-		return s->arr[s->top];
-	return '\0';
-}
-
-void removeNewLineChar(char *str)
-{
-	int len = strlen(str);
-	if (len > 0 && str[len - 1] == '\n')
-		str[len - 1] = '\0';
+	if (isEmpty())
+		return '\0';
+	return arr[top];
 }
 
 int isPalindrome(char *str)
 {
-	int len = strlen(str);
-	Stack s;
-	init(&s, len > 0 ? len : 1);
+	top = -1;
 
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < strlen(str); i++)
 	{
-		push(&s, str[i]);
+		push(str[i]);
 	}
 
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < strlen(str); i++)
 	{
-		if (str[i] != pop(&s))
-		{
-			freeStack(&s);
-			return 0;
-		}
+		return str[i] == pop();
 	}
-
-	freeStack(&s);
-	return 1;
 }
 
-int isMatchingPair(char open, char close)
+int isBalanced(char *expr)
 {
-	return (open == '(' && close == ')') ||
-		   (open == '{' && close == '}') ||
-		   (open == '[' && close == ']');
-}
+	top = -1;
 
-int areParenthesesBalanced(char *expr)
-{
-	int len = strlen(expr);
-	Stack s;
-	init(&s, len > 0 ? len : 1);
-
-	for (int i = 0; i < len; i++)
+	for (int i = 0; expr[i] != '\0'; i++)
 	{
 		char c = expr[i];
 
 		if (c == '(' || c == '{' || c == '[')
-		{
-			push(&s, c);
-		}
+			push(c);
+
 		else if (c == ')' || c == '}' || c == ']')
 		{
-			if (isEmpty(&s) || !isMatchingPair(pop(&s), c))
+			if (isEmpty() ||
+				(c == ')' && peek() != '(') ||
+				(c == '}' && peek() != '{') ||
+				(c == ']' && peek() != '['))
 			{
-				freeStack(&s);
 				return 0;
 			}
+
+			else
+				pop();
 		}
 	}
 
-	int balanced = isEmpty(&s);
-	freeStack(&s);
-	return balanced;
+	return isEmpty();
 }
