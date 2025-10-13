@@ -33,7 +33,7 @@ int printAncestors(Node *root, int key);
 int countLeaves(Node *root);
 
 // modification
-void printIntermediateNodes(Node *root);
+void printIntermediateNodes(Node *root, Node *parent);
 void inorderIterativeReverse(Node *root);
 
 int main()
@@ -65,7 +65,7 @@ int main()
 	printf("\n\nNumber of leaf nodes: %d\n", countLeaves(root));
 
 	printf("\nIntermediate nodes: ");
-	printIntermediateNodes(root);
+	printIntermediateNodes(root, NULL);
 
 	printf("\nInorder reverse traversal: ");
 	inorderIterativeReverse(root);
@@ -235,17 +235,16 @@ int countLeaves(Node *root)
 	return countLeaves(root->left) + countLeaves(root->right);
 }
 
-void printIntermediateNodes(Node *root)
+void printIntermediateNodes(Node *root, Node *parent)
 {
 	if (root == NULL)
 		return;
 
-	while (root->left != NULL && root->right != NULL)
-	{
-		printIntermediateNodes(root->left);
+	if (parent != NULL && (root->left != NULL || root->right != NULL))
 		printf("%d ", root->data);
-		printIntermediateNodes(root->right);
-	}
+
+	printIntermediateNodes(root->left, root);
+	printIntermediateNodes(root->right, root);
 }
 
 void inorderIterativeReverse(Node *root)
