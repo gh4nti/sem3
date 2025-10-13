@@ -52,7 +52,7 @@ int main()
 	scanf("%d", &key);
 	printf("Ancestors of %d: ", key);
 	if (!printAncestors(root, key))
-		printf("Element not found.");
+		printf("Element not found.\n");
 
 	printf("\n\nNumber of leaf nodes: %d\n", countLeaves(root));
 
