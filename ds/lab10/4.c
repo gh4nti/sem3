@@ -17,7 +17,7 @@ void inorder(Node *root);
 
 int main()
 {
-	struct Node *root = NULL;
+	Node *root = NULL;
 	int n, data;
 
 	printf("Enter number of nodes: ");
@@ -33,8 +33,8 @@ int main()
 	printf("\nInorder traversal of BST: ");
 	inorder(root);
 
-	struct Node *minNode = findMin(root);
-	struct Node *maxNode = findMax(root);
+	Node *minNode = findMin(root);
+	Node *maxNode = findMax(root);
 
 	if (minNode != NULL && maxNode != NULL)
 	{
