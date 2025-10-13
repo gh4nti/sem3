@@ -30,7 +30,6 @@ int countLeaves(Node *root);
 
 int main()
 {
-	printf("Build the binary tree:\n");
 	Node *root = buildTree();
 
 	printf("\nInorder Traversal (Iterative): ");
