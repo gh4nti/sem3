@@ -16,7 +16,7 @@ void inorder(Node *root);
 
 int main()
 {
-	struct Node *root = NULL;
+	Node *root = NULL;
 	int n, data, key;
 
 	printf("Enter number of nodes: ");
@@ -35,7 +35,7 @@ int main()
 	printf("\n\nEnter element to search: ");
 	scanf("%d", &key);
 
-	struct Node *result = search(root, key);
+	Node *result = search(root, key);
 	if (result != NULL)
 		printf("Element %d found in the BST.\n", key);
 	else
