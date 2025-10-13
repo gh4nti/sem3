@@ -64,10 +64,10 @@ int main()
 
 	printf("\n\nNumber of leaf nodes: %d\n", countLeaves(root));
 
-	printf("\nIntermediate nodes:\n");
+	printf("\nIntermediate nodes: ");
 	printIntermediateNodes(root);
 
-	printf("\nInorder reverse traversal:\n");
+	printf("\nInorder reverse traversal: ");
 	inorderIterativeReverse(root);
 
 	return 0;
@@ -250,6 +250,8 @@ void printIntermediateNodes(Node *root)
 
 void inorderIterativeReverse(Node *root)
 {
+	int arr[100];
+	int n = 0, i = 0;
 	Node *stack[100];
 	int top = -1;
 	Node *curr = root;
@@ -262,6 +264,14 @@ void inorderIterativeReverse(Node *root)
 			curr = curr->left;
 		}
 		curr = stack[top--];
+		arr[i++] = curr->data;
+		n++;
 		curr = curr->right;
 	}
+
+	for (int j = 0; j < n; j++)
+	{
+		printf("%d ", arr[n - j - 1]);
+	}
+	printf("\n");
 }
