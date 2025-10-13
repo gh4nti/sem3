@@ -18,7 +18,7 @@ void postorder(Node *root);
 int main()
 {
 	Node *root = NULL;
-	int n, data;
+	int n, c, data;
 
 	printf("Enter number of nodes to insert: ");
 	scanf("%d", &n);
@@ -30,16 +30,34 @@ int main()
 		root = insert(root, data);
 	}
 
-	printf("\nInorder Traversal: ");
-	inorder(root);
+	while (1)
+	{
+		printf("\nBST menu\n");
+		printf("1. Inorder traversal\n");
+		printf("2. Preorder traversal\n");
+		printf("3. Postorder traversal\n");
+		printf("4. Exit\n");
+		printf("Enter your choice: ");
+		scanf("%d", &c);
 
-	printf("\nPreorder Traversal: ");
-	preorder(root);
-
-	printf("\nPostorder Traversal: ");
-	postorder(root);
-
-	printf("\n");
+		switch (c)
+		{
+		case 1:
+			inorder(root);
+			break;
+		case 2:
+			preorder(root);
+			break;
+		case 3:
+			postorder(root);
+			break;
+		case 4:
+			printf("Exiting...\n");
+			return 0;
+		default:
+			printf("Invalid choice. Please try again\n");
+		}
+	}
 	return 0;
 }
 
