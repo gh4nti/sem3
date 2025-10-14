@@ -26,9 +26,9 @@ module decoder3to8 (
 		if (en) begin
 			for (i = 0; i < 8; i = i + 1) begin
 				if (i == a)
-                	Y[i] = 1'b1;
+                	y[i] = 1'b1;
             	else
-                	Y[i] = 1'b0;
+                	y[i] = 1'b0;
         	end
 		end
 	end
