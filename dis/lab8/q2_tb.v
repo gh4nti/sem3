@@ -9,7 +9,7 @@ module q2_tb;
 	reg [n-1:0] d;
 	wire [n-1:0] q;
 
-	q2 ques2 (
+	q2 #(.n(n)) ques2 (
 		.clk(clk),
 		.rst(rst),
 		.d(d),
