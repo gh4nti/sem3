@@ -15,7 +15,7 @@ module q1 (
 	assign KB = E & b;
 
 	always @(posedge clk) begin
-		// flip-flop A
+		// JK flip-flop A
 		case ({JA, KA})
 			2'b10: a <= 1'b1;
 			2'b01: a <= 1'b0;
@@ -23,7 +23,7 @@ module q1 (
 			default: a <= a;
 		endcase
 
-		// flip-flop B
+		// JK flip-flop B
 		case ({JB, KB})
 			2'b10: b <= 1'b1;
 			2'b01: b <= 1'b0;
