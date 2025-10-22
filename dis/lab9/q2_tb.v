@@ -1,3 +1,6 @@
+`timescale 1ns/1ns
+`include "q2.v"
+
 module q2_tb;
 
 	reg clk, x;
