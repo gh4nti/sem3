@@ -18,7 +18,6 @@ Node *leftRotate(Node *x);
 int getBalance(Node *node);
 Node *insert(Node *root, int data);
 void inorder(Node *root);
-void preorder(Node *root);
 
 int main()
 {
@@ -33,17 +32,10 @@ int main()
 	{
 		scanf("%d", &data);
 		root = insert(root, data);
-		printf("Preorder after inserting %d: ", data);
-		preorder(root);
-		printf("\n");
 	}
 
 	printf("\nFinal Inorder traversal (sorted): ");
 	inorder(root);
-	printf("\n");
-
-	printf("Final Preorder traversal (AVL structure): ");
-	preorder(root);
 	printf("\n");
 
 	return 0;
@@ -149,15 +141,5 @@ void inorder(Node *root)
 		inorder(root->left);
 		printf("%d ", root->data);
 		inorder(root->right);
-	}
-}
-
-void preorder(Node *root)
-{
-	if (root != NULL)
-	{
-		printf("%d ", root->data);
-		preorder(root->left);
-		preorder(root->right);
 	}
 }
