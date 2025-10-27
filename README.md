@@ -2,5 +2,5 @@
 
 Codes included:
 
--   DS lab
--   DIS lab
+-   DS (Data Structures) lab
+-   DIS (Digital Systems) lab
