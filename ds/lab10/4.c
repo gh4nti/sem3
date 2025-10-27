@@ -91,3 +91,13 @@ Node *findMax(Node *root)
 		curr = curr->right;
 	return curr;
 }
+
+void inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+
+	inorder(root->left);
+	printf("%d ", root->data);
+	inorder(root->right);
+}
