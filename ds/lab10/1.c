@@ -30,34 +30,17 @@ int main()
 		root = insert(root, data);
 	}
 
-	while (1)
-	{
-		printf("\nBST menu\n");
-		printf("1. Inorder traversal\n");
-		printf("2. Preorder traversal\n");
-		printf("3. Postorder traversal\n");
-		printf("4. Exit\n");
-		printf("Enter your choice: ");
-		scanf("%d", &c);
+	printf("\nInorder Traversal:\n");
+	inorder(root);
 
-		switch (c)
-		{
-		case 1:
-			inorder(root);
-			break;
-		case 2:
-			preorder(root);
-			break;
-		case 3:
-			postorder(root);
-			break;
-		case 4:
-			printf("Exiting...\n");
-			return 0;
-		default:
-			printf("Invalid choice. Please try again\n");
-		}
-	}
+	printf("\nPreorder Traversal:\n");
+	preorder(root);
+
+	printf("\nPostorder Traversal:\n");
+	postorder(root);
+
+	printf("\n");
+
 	return 0;
 }
 
