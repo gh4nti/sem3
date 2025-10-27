@@ -13,7 +13,7 @@ typedef struct Node
 typedef struct Graph
 {
 	int vertices;
-	Node *adjLists[MAX];
+	Node *adj[MAX];
 } Graph;
 
 int visited[MAX];
@@ -50,7 +50,7 @@ int main()
 
 	for (int i = 0; i < vertices; i++)
 	{
-		Node *temp = graph->adjLists[i];
+		Node *temp = graph->adj[i];
 		while (temp)
 		{
 			Node *toFree = temp;
@@ -76,26 +76,26 @@ Graph *createGraph(int vertices)
 	Graph *graph = (Graph *)malloc(sizeof(Graph));
 	graph->vertices = vertices;
 	for (int i = 0; i < vertices; i++)
-		graph->adjLists[i] = NULL;
+		graph->adj[i] = NULL;
 	return graph;
 }
 
 void addEdge(Graph *graph, int src, int dest)
 {
 	Node *newNode = createNode(dest);
-	newNode->next = graph->adjLists[src];
-	graph->adjLists[src] = newNode;
+	newNode->next = graph->adj[src];
+	graph->adj[src] = newNode;
 
 	newNode = createNode(src);
-	newNode->next = graph->adjLists[dest];
-	graph->adjLists[dest] = newNode;
+	newNode->next = graph->adj[dest];
+	graph->adj[dest] = newNode;
 }
 
 int DFS_Cycle(Graph *graph, int vertex, int parent)
 {
 	visited[vertex] = 1;
 
-	Node *temp = graph->adjLists[vertex];
+	Node *temp = graph->adj[vertex];
 	while (temp)
 	{
 		int adjVertex = temp->vertex;

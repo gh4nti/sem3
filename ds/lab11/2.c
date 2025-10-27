@@ -12,7 +12,7 @@ typedef struct Node
 typedef struct Graph
 {
 	int vertices;
-	Node **adjLists;
+	Node **adj;
 	int directed;
 } Graph;
 
@@ -72,9 +72,9 @@ Graph *createGraph(int vertices, int directed)
 	graph->vertices = vertices;
 	graph->directed = directed;
 
-	graph->adjLists = (Node **)malloc(vertices * sizeof(Node *));
+	graph->adj = (Node **)malloc(vertices * sizeof(Node *));
 	for (int i = 0; i < vertices; i++)
-		graph->adjLists[i] = NULL;
+		graph->adj[i] = NULL;
 
 	return graph;
 }
@@ -82,14 +82,14 @@ Graph *createGraph(int vertices, int directed)
 void addEdge(Graph *graph, int src, int dest)
 {
 	Node *newNode = createNode(dest);
-	newNode->next = graph->adjLists[src];
-	graph->adjLists[src] = newNode;
+	newNode->next = graph->adj[src];
+	graph->adj[src] = newNode;
 
 	if (!graph->directed)
 	{
 		newNode = createNode(src);
-		newNode->next = graph->adjLists[dest];
-		graph->adjLists[dest] = newNode;
+		newNode->next = graph->adj[dest];
+		graph->adj[dest] = newNode;
 	}
 }
 
@@ -97,7 +97,7 @@ void printGraph(Graph *graph)
 {
 	for (int i = 0; i < graph->vertices; i++)
 	{
-		Node *temp = graph->adjLists[i];
+		Node *temp = graph->adj[i];
 		printf("Vertex %d: ", i);
 		while (temp)
 		{
@@ -111,7 +111,7 @@ void freeGraph(Graph *graph)
 {
 	for (int i = 0; i < graph->vertices; i++)
 	{
-		Node *temp = graph->adjLists[i];
+		Node *temp = graph->adj[i];
 		while (temp)
 		{
 			Node *toFree = temp;
@@ -119,6 +119,6 @@ void freeGraph(Graph *graph)
 			free(toFree);
 		}
 	}
-	free(graph->adjLists);
+	free(graph->adj);
 	free(graph);
 }
