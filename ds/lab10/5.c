@@ -16,7 +16,7 @@ Node *createNode(int data);
 Node *rightRotate(Node *y);
 Node *leftRotate(Node *x);
 int getBalance(Node *node);
-Node *insert(Node *node, int key);
+Node *insert(Node *root, int data);
 void inorder(Node *root);
 void preorder(Node *root);
 
@@ -105,41 +105,41 @@ int getBalance(Node *node)
 	return height(node->left) - height(node->right);
 }
 
-Node *insert(Node *node, int key)
+Node *insert(Node *root, int data)
 {
-	if (node == NULL)
-		return createNode(key);
+	if (root == NULL)
+		return createNode(data);
 
-	if (key < node->data)
-		node->left = insert(node->left, key);
-	else if (key > node->data)
-		node->right = insert(node->right, key);
+	if (data < root->data)
+		root->left = insert(root->left, data);
+	else if (data > root->data)
+		root->right = insert(root->right, data);
 	else
-		return node;
+		return root;
 
-	node->height = 1 + max(height(node->left), height(node->right));
+	root->height = 1 + max(height(root->left), height(root->right));
 
-	int balance = getBalance(node);
+	int balance = getBalance(root);
 
-	if (balance > 1 && key < node->left->data)
-		return rightRotate(node);
+	if (balance > 1 && data < root->left->data)
+		return rightRotate(root);
 
-	if (balance < -1 && key > node->right->data)
-		return leftRotate(node);
+	if (balance < -1 && data > root->right->data)
+		return leftRotate(root);
 
-	if (balance > 1 && key > node->left->data)
+	if (balance > 1 && data > root->left->data)
 	{
-		node->left = leftRotate(node->left);
-		return rightRotate(node);
+		root->left = leftRotate(root->left);
+		return rightRotate(root);
 	}
 
-	if (balance < -1 && key < node->right->data)
+	if (balance < -1 && data < root->right->data)
 	{
-		node->right = rightRotate(node->right);
-		return leftRotate(node);
+		root->right = rightRotate(root->right);
+		return leftRotate(root);
 	}
 
-	return node;
+	return root;
 }
 
 void inorder(Node *root)
