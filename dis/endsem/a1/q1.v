@@ -77,7 +77,7 @@ module parallelreg4bit (
 
 endmodule
 
-module a1 (
+module q1 (
 	input clk, rst,
 	input [3:0] a, b,
 	output [3:0] q

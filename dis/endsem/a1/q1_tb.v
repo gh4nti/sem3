@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
-`include "a1.v"
+`include "q1.v"
 
-module a1_tb;
+module q1_tb;
 
 	reg clk, rst;
 	reg [3:0] a, b;
@@ -9,7 +9,7 @@ module a1_tb;
 	integer i, j, err;
 	wire [3:0] exp;
 
-	a1 compmux4bit (
+	q1 compmux4bit (
 		.clk(clk),
 		.rst(rst),
 		.a(a),
@@ -24,8 +24,8 @@ module a1_tb;
 
 	initial begin
 		
-		$dumpfile("a1_tb.vcd");
-		$dumpvars(0, a1_tb);
+		$dumpfile("q1_tb.vcd");
+		$dumpvars(0, q1_tb);
 
 		rst = 0;
 		a = 0; b = 0;
